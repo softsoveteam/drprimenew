@@ -7953,6 +7953,8 @@ header.main-header.dp-header .slicknav_nav .slicknav_row:hover{
   box-shadow: 0 16px 40px rgba(29, 28, 80, 0.05);
   display: flex;
   flex-direction: column;
+  height: 100%;
+  transform-origin: center top;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
@@ -8069,14 +8071,75 @@ header.main-header.dp-header .slicknav_nav .slicknav_row:hover{
 }
 
 @media (max-width: 991px) {
-  .dp-wyg-grid {
-    grid-template-columns: 1fr;
+  .dp-wyg-grid,
+  .dp-wyg-stack {
+    display: block;
+    grid-template-columns: none;
     max-width: 460px;
     margin: 0 auto;
   }
 
   .dp-what-you-get {
     padding: 70px 0 60px;
+  }
+
+  .dp-wyg-stack-item {
+    position: sticky;
+    width: 100%;
+    margin-bottom: 18px;
+  }
+
+  .dp-wyg-stack-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .dp-wyg-stack-item:nth-child(1) {
+    top: 100px;
+    z-index: 1;
+  }
+
+  .dp-wyg-stack-item:nth-child(2) {
+    top: 114px;
+    z-index: 2;
+  }
+
+  .dp-wyg-stack-item:nth-child(3) {
+    top: 128px;
+    z-index: 3;
+  }
+
+  .dp-wyg-stack-item .dp-wyg-card {
+    box-shadow: 0 16px 40px rgba(29, 28, 80, 0.12);
+  }
+
+  .dp-wyg-stack-item .dp-wyg-card:hover {
+    transform: none;
+  }
+
+  .dp-wyg-stack-item.is-passed .dp-wyg-card {
+    transform: scale(0.96);
+    box-shadow: 0 8px 24px rgba(29, 28, 80, 0.1);
+  }
+
+  .dp-wyg-footer {
+    position: relative;
+    z-index: 0;
+    margin-top: 12px;
+    padding: 8px 0;
+  }
+
+  .dp-wyg-footer.is-fixed-below-card {
+    position: fixed;
+    z-index: 0;
+    margin: 0;
+    padding: 12px 15px 16px;
+    background: var(--bg-color);
+  }
+
+  .dp-wyg-footer-placeholder {
+    width: 100%;
+    height: 0;
+    pointer-events: none;
   }
 }
 
