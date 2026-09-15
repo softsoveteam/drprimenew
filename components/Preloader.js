@@ -3,22 +3,44 @@
 import { useEffect, useState } from "react";
 
 export default function Preloader() {
-  const [done, setDone] = useState(false);
+  const [done, setDone] = useState(true);
 
   useEffect(() => {
-    const minDelay = new Promise((resolve) => setTimeout(resolve, 1400));
-    const pageReady =
-      document.readyState === "complete"
-        ? Promise.resolve()
-        : new Promise((resolve) =>
-            window.addEventListener("load", resolve, { once: true })
-          );
+    // Check if preloader has already been shown in this browser session
+    if (typeof window !== "undefined") {
+      const hasSeenPreloader = sessionStorage.getItem("dp_preloader_seen");
+      if (hasSeenPreloader) {
+        setDone(true);
+        return;
+      }
 
-    Promise.all([minDelay, pageReady]).then(() => setDone(true));
+      // First time in session: show preloader and hide as soon as page is complete
+      setDone(false);
 
-    const fallback = setTimeout(() => setDone(true), 4000);
-    return () => clearTimeout(fallback);
+      const hidePreloader = () => {
+        setDone(true);
+        sessionStorage.setItem("dp_preloader_seen", "true");
+      };
+
+      if (document.readyState === "complete") {
+        const timeout = setTimeout(hidePreloader, 300);
+        return () => clearTimeout(timeout);
+      } else {
+        const handleLoad = () => {
+          setTimeout(hidePreloader, 300);
+        };
+        window.addEventListener("load", handleLoad, { once: true });
+        const fallback = setTimeout(hidePreloader, 1500);
+
+        return () => {
+          window.removeEventListener("load", handleLoad);
+          clearTimeout(fallback);
+        };
+      }
+    }
   }, []);
+
+  if (done) return null;
 
   return (
     <div

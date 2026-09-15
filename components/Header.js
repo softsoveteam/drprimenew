@@ -1,45 +1,74 @@
+"use client";
+
+import Link from "next/link";
+import { useUserStore } from "@/lib/store/useUserStore";
+import { useUserProfile } from "@/hooks/useUserAuth";
+import { User } from "lucide-react";
+
 export default function Header() {
+  const { isAuthenticated, user: storeUser } = useUserStore();
+  const { data: profileUser } = useUserProfile();
+
+  const user = profileUser || storeUser;
+
   return (
     <header className="main-header dp-header">
       <div className="header-sticky">
         <nav className="navbar navbar-expand-lg">
           <div className="container">
-            <a className="navbar-brand" href="/">
+            <Link className="navbar-brand" href="/">
               <img src="/assets/logo-dark.png" alt="Dr.Prime Pillow Logo" />
-            </a>
+            </Link>
 
             <div className="collapse navbar-collapse main-menu">
               <div className="nav-menu-wrapper">
                 <ul className="navbar-nav mr-auto" id="menu">
                   <li className="nav-item">
-                    <a className="nav-link" href="/">
+                    <Link className="nav-link" href="/">
                       Home
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="/product">
+                    <Link className="nav-link" href="/product">
                       Pillow
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="/testimonials">
+                    <Link className="nav-link" href="/testimonials">
                       Testimonials
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="/image-gallery">
+                    <Link className="nav-link" href="/image-gallery">
                       Gallery
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="/faqs">
+                    <Link className="nav-link" href="/faqs">
                       FAQs
-                    </a>
+                    </Link>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="/contact">
+                    <Link className="nav-link" href="/contact">
                       Contact Us
-                    </a>
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" href="/articles">
+                      Articles
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    {isAuthenticated ? (
+                      <Link className="nav-link flex items-center gap-1.5 font-semibold text-[#1d1c50]" href="/profile">
+                        <User className="w-4 h-4 text-[#c9b896]" />
+                        <span>{user?.name?.split(" ")[0] || "Account"}</span>
+                      </Link>
+                    ) : (
+                      <Link className="nav-link" href="/login">
+                        Sign In
+                      </Link>
+                    )}
                   </li>
                 </ul>
               </div>
