@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 224 71% 4%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+    
+    /* Primary Dr.Prime Brand Navy #1d1c50 */
+    --primary: 241 48% 21%;
+    --primary-foreground: 210 40% 98%;
+    
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220.9 39.3% 11%;
+    
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 8.9% 46.1%;
+    
+    --accent: 220 14% 94%;
+    --accent-foreground: 220.9 39.3% 11%;
+    
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    
+    --success: 142 71% 45%;
+    --success-foreground: 210 40% 98%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 210 40% 98%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 241 48% 21%;
+    --radius: 0.625rem;
+
+    /* Admin Sidebar Tokens */
+    --sidebar-background: 240 33% 10%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 241 48% 35%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 25% 16%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 240 25% 16%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 210 40% 98%;
+    
+    --card: 224 71% 7%;
+    --card-foreground: 210 40% 98%;
+    
+    --popover: 224 71% 7%;
+    --popover-foreground: 210 40% 98%;
+    
+    --primary: 241 60% 65%;
+    --primary-foreground: 224 71% 4%;
+    
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 40% 98%;
+    
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+    
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 40% 98%;
+    
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    
+    --success: 142 71% 45%;
+    --success-foreground: 210 40% 98%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 210 40% 98%;
+
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 241 60% 65%;
+
+    /* Dark Admin Sidebar */
+    --sidebar-background: 224 71% 5%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 241 60% 65%;
+    --sidebar-primary-foreground: 224 71% 4%;
+    --sidebar-accent: 224 71% 10%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 224 71% 10%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}

@@ -1,10 +1,6 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import Preloader from "@/components/Preloader";
-import StickyBuyButton from "@/components/StickyBuyButton";
-import GoToTop from "@/components/GoToTop";
-import TemplateScripts from "@/components/TemplateScripts";
-import PwaRegister from "@/components/PwaRegister";
+import "./globals.css";
+import QueryProvider from "@/components/QueryProvider";
+import PublicLayoutWrapper from "@/components/PublicLayoutWrapper";
 import {
   BRAND_COLOR,
   OG_IMAGE,
@@ -106,14 +102,9 @@ export default function RootLayout({ children }) {
         <link href="/css/custom.css" rel="stylesheet" media="screen" />
       </head>
       <body>
-        <Preloader />
-        <Header />
-        {children}
-        <Footer />
-        <StickyBuyButton />
-        <GoToTop />
-        <TemplateScripts />
-        <PwaRegister />
+        <QueryProvider>
+          <PublicLayoutWrapper>{children}</PublicLayoutWrapper>
+        </QueryProvider>
       </body>
     </html>
   );
