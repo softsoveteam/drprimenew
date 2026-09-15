@@ -34,4 +34,6 @@ Before changing or creating any file in this project, you MUST refer to and stri
 
 ## 5. Styling & UI Consistency
 - Use Tailwind CSS and shadcn/ui components (`@/components/ui/`) for UI development.
+- **Mandatory UI Components**: Always use project components from `@/components/ui` (such as `Input`, `Select`, `Label`, `Button`, etc.). Never use raw unstyled HTML elements (`<input>`, `<select>`, `<label>`) when building form controls or admin tables.
+- If a required UI component is missing from `@/components/ui`, install or create it following shadcn/ui patterns.
 - Maintain consistent design tokens and utility patterns across user-facing and admin pages.

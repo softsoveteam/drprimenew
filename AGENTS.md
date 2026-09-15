@@ -22,3 +22,4 @@
 
 5. **Styling & UI**:
    - Use Tailwind CSS and shadcn/ui components (`components/ui/`) with design tokens in `app/globals.css`.
+   - **UI Components Rule**: Always use UI components from `components/ui/` (`Input`, `Select`, `Label`, etc.) instead of raw native HTML inputs/selects. If a required component is missing, install/create it following shadcn/ui guidelines.

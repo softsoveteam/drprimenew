@@ -114,3 +114,21 @@ This log documents all setups, library installations, architectural configuratio
   - [`components/admin/AdminHeader.jsx`](file:///d:/project/frontend/drprimenew/components/admin/AdminHeader.jsx): Dynamic breadcrumb trails, live user profile badge, and logout actions.
   - [`app/auth-cp/dashboard/page.jsx`](file:///d:/project/frontend/drprimenew/app/auth-cp/dashboard/page.jsx): Integrated interactive demonstrations of both `DataTable` and `AsyncSelect`.
 
+### 9. Admin Profile & Logout API Integration (`ADMIN_API.md:L113-L177`)
+- **Profile Fetching (`GET /admin/me`)**:
+  - Implemented `useAdminProfile()` hook in [`hooks/useAdminAuth.js`](file:///d:/project/frontend/drprimenew/hooks/useAdminAuth.js).
+  - Automatically attaches auth Bearer token via centralized Axios interceptor.
+  - Syncs retrieved admin user record with Zustand store (`useAdminStore.setAdmin`).
+- **Logout Action (`POST /admin/logout`)**:
+  - Implemented `useAdminLogout()` mutation hook in [`hooks/useAdminAuth.js`](file:///d:/project/frontend/drprimenew/hooks/useAdminAuth.js).
+  - Calls backend logout endpoint, clears persistent Zustand store and `localStorage` (`admin_token`), clears TanStack Query cache, and redirects to `/auth-cp/login`.
+- **Component Integrations**:
+  - Synchronized across [`components/admin/AdminHeader.jsx`](file:///d:/project/frontend/drprimenew/components/admin/AdminHeader.jsx), [`components/admin/AdminSidebar.jsx`](file:///d:/project/frontend/drprimenew/components/admin/AdminSidebar.jsx), and [`app/auth-cp/dashboard/page.jsx`](file:///d:/project/frontend/drprimenew/app/auth-cp/dashboard/page.jsx).
+
+### 10. Admin Profile Route & Dedicated Component
+- **Routes Created**:
+  - [`app/auth-cp/profile/page.jsx`](file:///d:/project/frontend/drprimenew/app/auth-cp/profile/page.jsx): Standalone Admin Profile page component displaying user identity, role, active status, membership timeline, and API session security details with live refetch & logout triggers.
+  - [`app/auth-cp/settings/page.jsx`](file:///d:/project/frontend/drprimenew/app/auth-cp/settings/page.jsx): Account settings page route mapping directly to the profile view.
+
+
+

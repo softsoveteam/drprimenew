@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAdminStore } from "@/lib/store/useAdminStore";
-import { useMutation } from "@tanstack/react-query";
-import api from "@/lib/axios";
+import { useAdminLogout } from "@/hooks/useAdminAuth";
 import Link from "next/link";
 import {
   Menu,
@@ -19,25 +18,12 @@ import {
 } from "lucide-react";
 
 export default function AdminHeader() {
-  const router = useRouter();
   const pathname = usePathname();
-  const { admin, logout, toggleSidebar } = useAdminStore();
+  const { admin, toggleSidebar } = useAdminStore();
+  const logoutMutation = useAdminLogout();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-  // Logout mutation via TanStack Query and Axios Interceptor
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      try {
-        await api.post("/admin/logout");
-      } catch (err) {
-        console.warn("Backend logout notification failed:", err);
-      }
-    },
-    onSettled: () => {
-      logout();
-      router.replace("/auth-cp/login");
-    },
-  });
+  const currentAdmin = admin;
 
   const getBreadcrumbs = () => {
     const parts = pathname.split("/").filter(Boolean);
@@ -51,8 +37,9 @@ export default function AdminHeader() {
 
       if (parts.length > 2) {
         const sub = parts[2];
-        const subName = sub.charAt(0).toUpperCase() + sub.slice(1).replace("-", " ");
-        crumbs.push({ name: subName, href: pathname });
+        const subName = decodeURIComponent(sub).replace(/-/g, " ");
+        const formattedName = subName.charAt(0).toUpperCase() + subName.slice(1);
+        crumbs.push({ name: formattedName, href: pathname });
       }
     } else {
       crumbs.push({ name: "Dashboard", href: "/auth-cp/dashboard" });
@@ -114,21 +101,21 @@ export default function AdminHeader() {
           <ExternalLink className="h-3 w-3 text-slate-400" />
         </Link>
 
-        {/* Profile Dropdown */}
+          {/* Profile Dropdown */}
         <div className="relative">
           <button
             onClick={() => setShowProfileMenu(!showProfileMenu)}
             className="flex items-center gap-2.5 p-1 rounded-xl hover:bg-slate-100 transition-colors text-left cursor-pointer select-none"
           >
             <div className="h-8 w-8 rounded-xl bg-gradient-to-tr from-[#1d1c50] to-[#363380] text-white flex items-center justify-center font-bold text-xs shadow-xs">
-              {admin?.name?.charAt(0) || "A"}
+              {currentAdmin?.name?.charAt(0) || "A"}
             </div>
             <div className="hidden lg:flex flex-col">
               <span className="text-xs font-bold text-slate-900 leading-tight">
-                {admin?.name || "Administrator"}
+                {currentAdmin?.name || "Administrator"}
               </span>
               <span className="text-[10px] text-slate-400 leading-tight">
-                {admin?.role?.toUpperCase() || "ADMIN"}
+                {currentAdmin?.role?.toUpperCase() || "ADMIN"}
               </span>
             </div>
           </button>
@@ -143,10 +130,10 @@ export default function AdminHeader() {
               <div className="absolute right-0 mt-2 w-60 rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-xl z-50 p-2 animate-in fade-in-50 zoom-in-95">
                 <div className="px-3 py-2.5 border-b border-slate-100 mb-1">
                   <p className="text-xs font-bold text-slate-900 truncate">
-                    {admin?.name || "Administrator"}
+                    {currentAdmin?.name || "Administrator"}
                   </p>
                   <p className="text-[11px] text-slate-500 truncate">
-                    {admin?.email || "admin@mydrprime.com"}
+                    {currentAdmin?.email || "admin@mydrprime.com"}
                   </p>
                   <div className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-[10px] font-semibold text-emerald-700 border border-emerald-200">
                     <CheckCircle2 className="h-3 w-3 text-emerald-600" />
@@ -155,12 +142,12 @@ export default function AdminHeader() {
                 </div>
 
                 <Link
-                  href="/auth-cp/settings"
+                  href="/auth-cp/profile"
                   onClick={() => setShowProfileMenu(false)}
                   className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 rounded-xl transition-colors font-medium"
                 >
                   <User className="h-3.5 w-3.5 text-slate-400" />
-                  <span>Account Settings</span>
+                  <span>Account Profile</span>
                 </Link>
 
                 <div className="my-1 border-t border-slate-100" />

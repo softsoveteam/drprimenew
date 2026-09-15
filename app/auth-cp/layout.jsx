@@ -6,6 +6,7 @@ import { useAdminStore } from "@/lib/store/useAdminStore";
 import AdminGuard from "@/components/admin/AdminGuard";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
+import { Toaster } from "react-hot-toast";
 
 export default function AuthCpLayout({ children }) {
   const pathname = usePathname();
@@ -28,7 +29,7 @@ export default function AuthCpLayout({ children }) {
         <div
           className={cn(
             "flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out",
-            isSidebarOpen ? "lg:ml-64" : "lg:ml-20"
+            isSidebarOpen ? "lg:ml-60" : "lg:ml-[68px]"
           )}
         >
           {/* Top Admin Header */}
@@ -45,6 +46,7 @@ export default function AuthCpLayout({ children }) {
           </footer>
         </div>
       </div>
+      <Toaster position="top-right" />
     </AdminGuard>
   );
 }

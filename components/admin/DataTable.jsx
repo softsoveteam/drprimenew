@@ -9,6 +9,8 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Search, RefreshCw, ChevronLeft, ChevronRight, Inbox } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -125,14 +127,16 @@ export function DataTable({
     >
       {/* Top Action & Search Bar */}
       <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3.5 p-4 sm:p-5 border-b border-slate-100 bg-slate-50/50">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 pointer-events-none" />
-          <input
-            className="w-full py-2 px-3 pl-9.5 text-sm rounded-xl border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 outline-none transition-all focus:border-[#1d1c50] focus:ring-2 focus:ring-[#1d1c50]/10 shadow-xs"
-            placeholder={placeholderText}
-            value={localSearch}
-            onChange={handleSearchChange}
-          />
+        <div className="flex-1 max-w-md">
+          <div className="flex items-center gap-2.5 border border-slate-200 rounded-xl px-3.5 h-10 bg-white focus-within:border-[#1d1c50] focus-within:ring-2 focus-within:ring-[#1d1c50]/10 transition-all shadow-xs">
+            <Search className="h-4 w-4 shrink-0 text-slate-400" />
+            <input
+              className="flex-1 bg-transparent text-sm text-slate-900 placeholder:text-slate-400 outline-none border-none min-w-0"
+              placeholder={placeholderText}
+              value={localSearch}
+              onChange={handleSearchChange}
+            />
+          </div>
         </div>
 
         <div className="flex items-center gap-2.5 justify-end">
@@ -153,7 +157,7 @@ export function DataTable({
       </div>
 
       {/* Table Content Area */}
-      <div className="overflow-x-auto flex-1">
+      <div className="overflow-x-auto flex-1 scrollbar-thin">
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/80 hover:bg-slate-50/80 border-b border-slate-200/80">
@@ -244,23 +248,23 @@ export function DataTable({
             </div>
 
             {onLimitChange && (
-              <div className="flex items-center gap-1.5">
-                <span className="text-slate-500">Per page:</span>
-                <select
+              <div className="flex items-center gap-1.5 min-w-[110px]">
+                <span className="text-slate-500 whitespace-nowrap">Per page:</span>
+                <Select
                   value={limit}
                   onChange={(e) => {
                     const val = Number(e.target.value);
                     onLimitChange(val);
                     onPageChange?.(1);
                   }}
-                  className="px-2 py-1 rounded-lg border border-slate-200 bg-white text-slate-800 outline-none focus:border-[#1d1c50] shadow-2xs font-medium cursor-pointer"
+                  className="px-2 py-1 text-xs rounded-lg border border-slate-200 bg-white text-slate-800 shadow-2xs font-medium cursor-pointer"
                 >
                   <option value={5}>5</option>
                   <option value={10}>10</option>
                   <option value={20}>20</option>
                   <option value={50}>50</option>
                   <option value={100}>100</option>
-                </select>
+                </Select>
               </div>
             )}
           </div>
