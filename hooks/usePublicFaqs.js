@@ -8,7 +8,7 @@ import { publicFaqService } from "@/services/public-faq.service";
  * Corresponds to USER API spec 5.1: GET /faqs
  * @param {Object} params - { search, page, per_page }
  */
-export function usePublicFaqs({ search = "", page = 1, per_page = 50 } = {}) {
+export function usePublicFaqs({ search = "", page = 1, per_page = 50 } = {}, options = {}) {
   return useQuery({
     queryKey: ["public-faqs", { search, page, per_page }],
     queryFn: async () => {
@@ -17,6 +17,7 @@ export function usePublicFaqs({ search = "", page = 1, per_page = 50 } = {}) {
       return response?.data || response;
     },
     staleTime: 1000 * 60 * 15, // 15 minutes
+    ...options,
   });
 }
 

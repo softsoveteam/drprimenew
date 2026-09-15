@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
  * Hook to fetch active contact form fields configured by admin
  * Corresponds to USER API spec 4.1: GET /contact-form/fields
  */
-export function useContactFormFields() {
+export function useContactFormFields(options = {}) {
   return useQuery({
     queryKey: ["contact-form-fields"],
     queryFn: async () => {
@@ -19,6 +19,7 @@ export function useContactFormFields() {
       return [...fields].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
     },
     staleTime: 1000 * 60 * 15, // 15 minutes
+    ...options,
   });
 }
 

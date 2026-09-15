@@ -6,16 +6,21 @@ import { usePublicFaqs } from "@/hooks/usePublicFaqs";
 import { FAQ_CATEGORIES, FAQS as FALLBACK_FAQS } from "@/lib/content";
 import { Search, Loader2 } from "lucide-react";
 
-export default function FaqPage() {
+export default function FaqPage({ initialFaqs = null }) {
   const [cat, setCat] = useState("quality");
   const [open, setOpen] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: faqsData, isLoading } = usePublicFaqs({
-    search: searchQuery,
-    page: 1,
-    per_page: 50,
-  });
+  const { data: faqsData, isLoading } = usePublicFaqs(
+    {
+      search: searchQuery,
+      page: 1,
+      per_page: 50,
+    },
+    {
+      initialData: !searchQuery && initialFaqs ? initialFaqs : undefined,
+    }
+  );
 
   const apiFaqs = faqsData?.data || [];
   const hasApiFaqs = apiFaqs.length > 0;

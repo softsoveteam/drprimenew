@@ -2,10 +2,20 @@ import ContactForm from "@/components/ContactForm";
 import PageTicker from "@/components/PageTicker";
 import JsonLd from "@/components/JsonLd";
 import { contactSchema, pageMetadata } from "@/lib/seo";
+import { publicContactFormService } from "@/services/public-contact-form.service";
 
 export const metadata = pageMetadata("contact");
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  let initialFields = [];
+  try {
+    const res = await publicContactFormService.getFields();
+    const fields = res?.data?.fields || res?.fields || res?.data || [];
+    initialFields = [...fields].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+  } catch (err) {
+    console.error("Failed to fetch contact form fields on server:", err?.message);
+  }
+
   return (
     <>
       <JsonLd data={contactSchema()} />
@@ -114,7 +124,7 @@ export default function ContactPage() {
                   </h2>
                 </div>
                 <div className="contact-form">
-                  <ContactForm />
+                  <ContactForm initialFields={initialFields} />
                 </div>
               </div>
             </div>

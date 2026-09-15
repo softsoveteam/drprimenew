@@ -20,7 +20,7 @@ export default function Header() {
               <img src="/assets/logo-dark.png" alt="Dr.Prime Pillow Logo" />
             </Link>
 
-            <div className="collapse navbar-collapse main-menu">
+            <div className="navbar-collapse main-menu flex items-center justify-between flex-1">
               <div className="nav-menu-wrapper">
                 <ul className="navbar-nav mr-auto" id="menu">
                   <li className="nav-item">
@@ -59,6 +59,11 @@ export default function Header() {
                     </Link>
                   </li>
                   <li className="nav-item">
+                    <Link className="nav-link" href="/service-area">
+                      Area
+                    </Link>
+                  </li>
+                  {/* <li className="nav-item">
                     {isAuthenticated ? (
                       <Link className="nav-link flex items-center gap-1.5 font-semibold text-[#1d1c50]" href="/profile">
                         <User className="w-4 h-4 text-[#c9b896]" />
@@ -69,7 +74,7 @@ export default function Header() {
                         Sign In
                       </Link>
                     )}
-                  </li>
+                  </li> */}
                 </ul>
               </div>
 

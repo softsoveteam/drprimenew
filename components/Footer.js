@@ -37,6 +37,9 @@ export default function Footer() {
                 <a href="/testimonials">Testimonials</a>
               </li>
               <li>
+                <a href="/service-area">Service Areas</a>
+              </li>
+              <li>
                 <a href="/contact">Contact Us</a>
               </li>
             </ul>
