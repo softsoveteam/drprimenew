@@ -4,9 +4,9 @@
   "private": true,
   "description": "Milkzen dairy farm template converted to Next.js (01.dairy-farm)",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3002",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3002",
     "convert": "node scripts/convert-html.mjs"
   },
   "engines": {
