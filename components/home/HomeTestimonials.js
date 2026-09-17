@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const HOME_REVIEWS = [
   {
@@ -53,8 +53,41 @@ const HOME_REVIEWS = [
   },
 ];
 
+function ReviewCard({ review }) {
+  return (
+    <div className="dp-review-card">
+      <div className="dp-review-quote-icon">
+        <i className="fa-solid fa-quote-right"></i>
+      </div>
+      <div className="dp-review-top">
+        <div className="dp-review-stars">
+          <i className="fa-solid fa-star"></i>
+          <i className="fa-solid fa-star"></i>
+          <i className="fa-solid fa-star"></i>
+          <i className="fa-solid fa-star"></i>
+          <i className="fa-solid fa-star"></i>
+        </div>
+        <h3>{review.title}</h3>
+        <p>&ldquo;{review.quote}&rdquo;</p>
+      </div>
+      <div className="dp-review-bottom">
+        <div className="dp-review-author">
+          <div className="dp-review-avatar">{review.name.charAt(0)}</div>
+          <div className="dp-review-author-info">
+            <span className="dp-review-name">{review.name}</span>
+            <span className="dp-review-verified">
+              <i className="fa-solid fa-circle-check"></i> Verified Buyer
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function HomeTestimonials() {
   const scrollRef = useRef(null);
+  const stackRef = useRef(null);
 
   const scrollByAmount = (direction) => {
     if (!scrollRef.current) return;
@@ -65,6 +98,47 @@ export default function HomeTestimonials() {
       behavior: "smooth",
     });
   };
+
+  useEffect(() => {
+    const stack = stackRef.current;
+    if (!stack) return;
+    const items = Array.from(stack.querySelectorAll(".dp-reviews-stack-item"));
+    if (!items.length) return;
+
+    let observer = null;
+    const isMobileStack = () => window.matchMedia("(max-width: 991px)").matches;
+
+    const setupObserver = () => {
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+      if (!isMobileStack()) {
+        items.forEach((item) => item.classList.remove("is-passed"));
+        return;
+      }
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            entry.target.classList.toggle("is-passed", !entry.isIntersecting);
+          });
+        },
+        {
+          root: null,
+          rootMargin: "-45% 0px -40% 0px",
+          threshold: 0,
+        }
+      );
+      items.forEach((item) => observer.observe(item));
+    };
+
+    setupObserver();
+    window.addEventListener("resize", setupObserver);
+    return () => {
+      if (observer) observer.disconnect();
+      window.removeEventListener("resize", setupObserver);
+    };
+  }, []);
 
   return (
     <section className="dp-reviews">
@@ -98,32 +172,18 @@ export default function HomeTestimonials() {
         <div className="dp-reviews-right">
           <div className="dp-reviews-track" ref={scrollRef}>
             {HOME_REVIEWS.map((review) => (
-              <div className="dp-review-card" key={review.name + review.title}>
-                <div className="dp-review-quote-icon">
-                  <i className="fa-solid fa-quote-right"></i>
-                </div>
-                <div className="dp-review-top">
-                  <div className="dp-review-stars">
-                    <i className="fa-solid fa-star"></i>
-                    <i className="fa-solid fa-star"></i>
-                    <i className="fa-solid fa-star"></i>
-                    <i className="fa-solid fa-star"></i>
-                    <i className="fa-solid fa-star"></i>
-                  </div>
-                  <h3>{review.title}</h3>
-                  <p>&ldquo;{review.quote}&rdquo;</p>
-                </div>
-                <div className="dp-review-bottom">
-                  <div className="dp-review-author">
-                    <div className="dp-review-avatar">{review.name.charAt(0)}</div>
-                    <div className="dp-review-author-info">
-                      <span className="dp-review-name">{review.name}</span>
-                      <span className="dp-review-verified">
-                        <i className="fa-solid fa-circle-check"></i> Verified Buyer
-                      </span>
-                    </div>
-                  </div>
-                </div>
+              <ReviewCard review={review} key={review.name + review.title} />
+            ))}
+          </div>
+
+          <div className="dp-reviews-stack" ref={stackRef}>
+            {HOME_REVIEWS.map((review, i) => (
+              <div
+                className="dp-reviews-stack-item"
+                key={`stack-${review.name}-${review.title}`}
+                style={{ top: `${100 + i * 14}px`, zIndex: i + 1 }}
+              >
+                <ReviewCard review={review} />
               </div>
             ))}
           </div>

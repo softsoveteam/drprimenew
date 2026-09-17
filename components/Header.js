@@ -1,15 +1,34 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useUserStore } from "@/lib/store/useUserStore";
-import { useUserProfile } from "@/hooks/useUserAuth";
-import { User } from "lucide-react";
+import { usePathname } from "next/navigation";
+
+const NAV_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/product", label: "Pillow" },
+  { href: "/testimonials", label: "Testimonials" },
+  { href: "/image-gallery", label: "Gallery" },
+  { href: "/faqs", label: "FAQs" },
+  { href: "/contact", label: "Contact Us" },
+  { href: "/articles", label: "Articles" },
+  { href: "/service-area", label: "Area" },
+];
+
+const BUY_URL = "https://www.amazon.com/dp/B0GX59F5BG";
 
 export default function Header() {
-  const { isAuthenticated, user: storeUser } = useUserStore();
-  const { data: profileUser } = useUserProfile();
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
 
-  const user = profileUser || storeUser;
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.classList.toggle("dp-nav-lock", open);
+    return () => document.body.classList.remove("dp-nav-lock");
+  }, [open]);
 
   return (
     <header className="main-header dp-header">
@@ -20,67 +39,22 @@ export default function Header() {
               <img src="/assets/logo-dark.png" alt="Dr.Prime Pillow Logo" />
             </Link>
 
-            <div className="navbar-collapse main-menu flex items-center justify-between flex-1">
+            <div className="navbar-collapse main-menu">
               <div className="nav-menu-wrapper">
                 <ul className="navbar-nav mr-auto" id="menu">
-                  <li className="nav-item">
-                    <Link className="nav-link" href="/">
-                      Home
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href="/product">
-                      Pillow
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href="/testimonials">
-                      Testimonials
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href="/image-gallery">
-                      Gallery
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href="/faqs">
-                      FAQs
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href="/contact">
-                      Contact Us
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href="/articles">
-                      Articles
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" href="/service-area">
-                      Area
-                    </Link>
-                  </li>
-                  {/* <li className="nav-item">
-                    {isAuthenticated ? (
-                      <Link className="nav-link flex items-center gap-1.5 font-semibold text-[#1d1c50]" href="/profile">
-                        <User className="w-4 h-4 text-[#c9b896]" />
-                        <span>{user?.name?.split(" ")[0] || "Account"}</span>
+                  {NAV_LINKS.map((item) => (
+                    <li className="nav-item" key={item.href}>
+                      <Link className="nav-link" href={item.href}>
+                        {item.label}
                       </Link>
-                    ) : (
-                      <Link className="nav-link" href="/login">
-                        Sign In
-                      </Link>
-                    )}
-                  </li> */}
+                    </li>
+                  ))}
                 </ul>
               </div>
 
               <div className="header-btn">
                 <a
-                  href="https://www.amazon.com/dp/B0GX59F5BG"
+                  href={BUY_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-default"
@@ -89,10 +63,41 @@ export default function Header() {
                 </a>
               </div>
             </div>
-            <div className="navbar-toggle"></div>
+
+            <button
+              type="button"
+              className={`dp-nav-toggle${open ? " is-open" : ""}`}
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              onClick={() => setOpen((v) => !v)}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
           </div>
         </nav>
-        <div className="responsive-menu"></div>
+
+        <div className={`dp-mobile-nav${open ? " is-open" : ""}`}>
+          <ul>
+            {NAV_LINKS.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href} onClick={() => setOpen(false)}>
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <a
+            href={BUY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-default"
+            onClick={() => setOpen(false)}
+          >
+            Buy Now
+          </a>
+        </div>
       </div>
     </header>
   );

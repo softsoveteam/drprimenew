@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+
+body.dp-nav-lock {
+  overflow: hidden;
+}
+
+/* Tailwind's .collapse { visibility: collapse } hides Bootstrap FAQ answers
+   after they open. Keep accordion panels visible once expanded. */
+.collapse,
+.collapsing,
+.accordion-collapse {
+  visibility: visible;
+}
+
 @layer base {
   :root {
     --background: 0 0% 98%;

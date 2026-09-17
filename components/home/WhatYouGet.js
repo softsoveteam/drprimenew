@@ -105,10 +105,6 @@ export default function WhatYouGet() {
       unpinFooter();
     };
 
-    const clearPassed = () => {
-      items.forEach((item) => item.classList.remove("is-passed"));
-    };
-
     const setupObserver = () => {
       if (observer) {
         observer.disconnect();
@@ -116,7 +112,7 @@ export default function WhatYouGet() {
       }
 
       if (!isMobileStack()) {
-        clearPassed();
+        items.forEach((item) => item.classList.remove("is-passed"));
         unpinFooter();
         return;
       }
@@ -139,15 +135,13 @@ export default function WhatYouGet() {
       updatePinnedFooter();
     };
 
-    const onResize = () => setupObserver();
-
     setupObserver();
-    window.addEventListener("resize", onResize);
+    window.addEventListener("resize", setupObserver);
     window.addEventListener("scroll", updatePinnedFooter, { passive: true });
 
     return () => {
       if (observer) observer.disconnect();
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener("resize", setupObserver);
       window.removeEventListener("scroll", updatePinnedFooter);
       unpinFooter();
       if (placeholder?.parentElement) placeholder.remove();

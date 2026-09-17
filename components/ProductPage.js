@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import PageTicker from "@/components/PageTicker";
+import BodyDesignCircle from "@/components/product/BodyDesignCircle";
 import {
   CUSTOMER_SAY_REVIEWS,
   PRODUCT_FAQS,
@@ -279,17 +280,10 @@ export default function ProductPage() {
             </div>
           </div>
           <p className="dp-stats-line">Cervical support engineered for the way you actually sleep.</p>
-          <div className="dp-body-grid">
-            {BODY_FEATURES.map((item) => (
-              <article key={item.title}>
-                <i className="fa-solid fa-star"></i>
-                <h3>{item.title}</h3>
-                <p>{item.body}</p>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
+
+      <BodyDesignCircle color={color} features={BODY_FEATURES} />
 
       <section className="dp-sleep-pos">
         <div className="container">
