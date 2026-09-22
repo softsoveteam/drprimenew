@@ -17,22 +17,79 @@ export default function ProductShowcase() {
     const p2 = p2Ref.current;
     if (!spacer || !section || !path || !p1 || !p2) return;
 
-    const isMobile = window.innerWidth <= 768;
-    const SCROLL_EXTRA = isMobile
-      ? window.innerHeight * 0.5
-      : window.innerHeight * 1.5;
+    const interactive = path.closest(".dp-product-interactive");
+    if (!interactive) return;
+
+    const isMobile = () => window.innerWidth <= 768;
+    const getScrollExtra = () =>
+      isMobile() ? window.innerHeight * 0.5 : window.innerHeight * 1.5;
+
     const setSpacer = () => {
-      spacer.style.height = section.offsetHeight + SCROLL_EXTRA + "px";
+      spacer.style.height = section.offsetHeight + getScrollExtra() + "px";
     };
     setSpacer();
 
-    const DOT1_END = 0.45;
-    const DOT2_END = 0.75;
+    // Pin callout dots onto the SVG curve on mobile only — keep desktop CSS positions
+    const placePointersOnCurve = () => {
+      if (!isMobile()) {
+        p1.style.left = "";
+        p1.style.top = "";
+        p2.style.left = "";
+        p2.style.top = "";
+        return;
+      }
+
+      const svg = path.ownerSVGElement;
+      const ctm = path.getScreenCTM();
+      if (!svg || !ctm) return;
+
+      const len = path.getTotalLength();
+      let peak = null;
+      let trough = null;
+      let minY = Infinity;
+      let maxY = -Infinity;
+
+      for (let i = 0; i <= 500; i++) {
+        const pt = path.getPointAtLength((i / 500) * len);
+        if (pt.x >= 80 && pt.x <= 400 && pt.y < minY) {
+          minY = pt.y;
+          peak = pt;
+        }
+        if (pt.x >= 700 && pt.x <= 1120 && pt.y > maxY) {
+          maxY = pt.y;
+          trough = pt;
+        }
+      }
+
+      const toLocal = (pt) => {
+        const sp = svg.createSVGPoint();
+        sp.x = pt.x;
+        sp.y = pt.y;
+        const screen = sp.matrixTransform(ctm);
+        const box = interactive.getBoundingClientRect();
+        return { x: screen.x - box.left, y: screen.y - box.top };
+      };
+
+      if (peak) {
+        const loc = toLocal(peak);
+        p1.style.left = `${loc.x}px`;
+        p1.style.top = `${loc.y}px`;
+      }
+      if (trough) {
+        const loc = toLocal(trough);
+        p2.style.left = `${loc.x}px`;
+        p2.style.top = `${loc.y}px`;
+      }
+    };
+
+    const DOT1_END = isMobile() ? 0.05 : 0.45;
+    const DOT2_END = isMobile() ? 0.15 : 0.75;
+    const SCROLL_OFFSET = isMobile() ? 0 : 200;
     const TOL = 0.02;
 
     let target = 0;
     let current = 0;
-    const LERP = 0.08;
+    const LERP = isMobile() ? 0.2 : 0.08;
     let running = false;
 
     const update = (progress) => {
@@ -58,25 +115,46 @@ export default function ProductShowcase() {
 
     const onScroll = () => {
       const rect = spacer.getBoundingClientRect();
-      const scrolled = -rect.top - 200;
-      target = Math.max(0, Math.min(1, scrolled / SCROLL_EXTRA));
+      let scrolled = -rect.top - SCROLL_OFFSET;
+      let progress = Math.max(0, Math.min(1, scrolled / getScrollExtra()));
+
+      if (isMobile()) {
+        const sr = section.getBoundingClientRect();
+        const inView =
+          sr.top < window.innerHeight * 0.8 && sr.bottom > window.innerHeight * 0.2;
+        if (inView) progress = Math.max(progress, 1);
+      }
+
+      target = progress;
       if (!running) {
         running = true;
         requestAnimationFrame(tick);
       }
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
     const onResize = () => {
       setSpacer();
+      placePointersOnCurve();
       onScroll();
     };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
-    onScroll();
+    const ro = new ResizeObserver(() => {
+      placePointersOnCurve();
+      setSpacer();
+    });
+    ro.observe(interactive);
+
+    requestAnimationFrame(() => {
+      placePointersOnCurve();
+      onScroll();
+    });
 
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
+      ro.disconnect();
     };
   }, []);
 

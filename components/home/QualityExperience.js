@@ -234,7 +234,6 @@ export default function QualityExperience() {
               <p>don&apos;t get the sleep their body needs</p>
             </div>
           </div>
-          <div className="dp-fab-mark">Dr.Prime Pillow<sup>TM</sup></div>
         </div>
       </section>
     </div>
