@@ -8,7 +8,7 @@ import { Search, Loader2 } from "lucide-react";
 
 export default function FaqPage({ initialFaqs = null }) {
   const [cat, setCat] = useState("quality");
-  const [open, setOpen] = useState(0);
+  const [open, setOpen] = useState(-1);
   const [searchQuery, setSearchQuery] = useState("");
 
   const { data: faqsData, isLoading } = usePublicFaqs(
@@ -71,7 +71,7 @@ export default function FaqPage({ initialFaqs = null }) {
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
-                    setOpen(0);
+                    setOpen(-1);
                   }}
                   className="w-full h-14 pl-12 pr-10 rounded-2xl bg-white border border-[#1d1c50]/15 text-[#1d1c50] shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1d1c50] text-base placeholder:text-[#4a4a6a]/50"
                 />
@@ -79,7 +79,7 @@ export default function FaqPage({ initialFaqs = null }) {
                   <button
                     onClick={() => {
                       setSearchQuery("");
-                      setOpen(0);
+                      setOpen(-1);
                     }}
                     className="absolute right-4 text-xs font-semibold text-[#4a4a6a] hover:text-[#1d1c50] bg-[#f8f5ed] px-2 py-1 rounded-md"
                   >
@@ -99,7 +99,7 @@ export default function FaqPage({ initialFaqs = null }) {
                   className={cat === item.key ? "is-active" : ""}
                   onClick={() => {
                     setCat(item.key);
-                    setOpen(0);
+                    setOpen(-1);
                   }}
                 >
                   <img src={item.icon} alt={item.label} />

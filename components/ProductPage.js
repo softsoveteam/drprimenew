@@ -105,7 +105,7 @@ function galleryImage(heading, color) {
 export default function ProductPage() {
   const [color, setColor] = useState("blue");
   const [active, setActive] = useState(0);
-  const [open, setOpen] = useState(0);
+  const [open, setOpen] = useState(-1);
   const thumbs = color === "grey" ? GRAY_THUMBS : BLUE_THUMBS;
   const amazon =
     color === "grey"

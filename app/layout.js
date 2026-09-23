@@ -99,7 +99,7 @@ export default function RootLayout({ children }) {
         <link href="/css/all.min.css" rel="stylesheet" media="screen" />
         <link href="/css/animate.css" rel="stylesheet" />
         <link href="/css/magnific-popup.css" rel="stylesheet" />
-        <link href="/css/custom.css?v=reviews-stack-1" rel="stylesheet" media="screen" />
+        <link href="/css/custom.css?v=hero-overlay-45" rel="stylesheet" media="screen" />
       </head>
       <body>
         <QueryProvider>

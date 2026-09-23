@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 export default function QualityExperience() {
   const spacerRef = useRef(null);
   const sectionRef = useRef(null);
+  const stageRef = useRef(null);
   const centerRef = useRef(null);
   const layer1Ref = useRef(null);
   const layer2Ref = useRef(null);
@@ -22,6 +23,7 @@ export default function QualityExperience() {
   useEffect(() => {
     const spacer = spacerRef.current;
     const section = sectionRef.current;
+    const stage = stageRef.current;
     const center = centerRef.current;
     const l1 = layer1Ref.current;
     const l2 = layer2Ref.current;
@@ -37,10 +39,105 @@ export default function QualityExperience() {
     const img4 = layerImg4Ref.current;
     if (!spacer || !section) return;
 
-    const isMobile = window.innerWidth <= 768;
-    const SCROLL_EXTRA = isMobile ? 0 : window.innerHeight * 1.5;
+    // Headings map 1→1, 2→2, 3→3, 4→4 using packed pillow stack positions
+    const pairs = [
+      { layer: img1, point: l1, side: "left", yRatio: 0.4, inset: 0.34, pillowY: 0.12 },
+      { layer: img2, point: l2, side: "right", yRatio: 0.45, inset: 0.14, pillowY: 0.34 },
+      { layer: img3, point: l3, side: "left", yRatio: 0.45, inset: 0.14, pillowY: 0.56 },
+      { layer: img4, point: l4, side: "right", yRatio: 0.72, inset: 0.14, pillowY: 0.84 },
+    ];
+
+    /** Pin each heading to its matching pillow layer on mobile */
+    const alignHeadingsToLayers = () => {
+      if (!stage || !center) return;
+
+      if (window.innerWidth >= 992) {
+        pairs.forEach(({ point }) => {
+          if (!point) return;
+          point.style.top = "";
+          point.style.transform = "";
+          point.style.left = "";
+          point.style.right = "";
+          const line = point.querySelector(".dp-lp-line");
+          if (line) line.style.width = "";
+        });
+        return;
+      }
+
+      const stageRect = stage.getBoundingClientRect();
+      const pillowRect = center.getBoundingClientRect();
+      if (pillowRect.width < 2) return;
+      const edgePad = 2;
+
+      pairs.forEach(({ layer, point, side, yRatio, inset, pillowY }, index) => {
+        if (!point || !layer) return;
+        const target = layer.querySelector("img") || layer;
+        const layerRect = target.getBoundingClientRect();
+        if (layerRect.height < 2) return;
+
+        // Blend layer box + pillow stack so 4th heading sits on bottom fabric
+        const fromLayer =
+          layerRect.top - stageRect.top + layerRect.height * yRatio;
+        const fromPillow =
+          pillowRect.top - stageRect.top + pillowRect.height * pillowY;
+        // Prefer pillowY for bottom layer; average for others
+        const anchorY = index === 3 ? fromPillow : (fromLayer + fromPillow) / 2;
+        point.style.top = `${Math.round(anchorY)}px`;
+        point.style.transform = "translateY(-50%)";
+
+        if (side === "left") {
+          point.style.left = `${edgePad}px`;
+          point.style.right = "auto";
+        } else {
+          point.style.right = `${edgePad}px`;
+          point.style.left = "auto";
+        }
+
+        const line = point.querySelector(".dp-lp-line");
+        const content = point.querySelector(".dp-lp-content");
+        if (!line || !content) return;
+
+        line.style.width = "0px";
+        const contentRect = content.getBoundingClientRect();
+
+        let lineW;
+        if (side === "left") {
+          const dotTarget =
+            pillowRect.left - stageRect.left + pillowRect.width * inset;
+          lineW = dotTarget - (contentRect.right - stageRect.left) - 2;
+        } else {
+          const dotTarget =
+            pillowRect.right - stageRect.left - pillowRect.width * inset;
+          lineW = contentRect.left - stageRect.left - dotTarget - 2;
+        }
+        line.style.width = `${Math.max(28, Math.round(lineW))}px`;
+      });
+
+      pairs.forEach(({ point, side, inset }) => {
+        if (!point) return;
+        const line = point.querySelector(".dp-lp-line");
+        const dot = point.querySelector(".dp-lp-dot");
+        if (!line || !dot) return;
+
+        const dr = dot.getBoundingClientRect();
+        let extra = 0;
+        if (side === "left") {
+          extra = pillowRect.left + pillowRect.width * inset - dr.right;
+        } else {
+          extra = dr.left - (pillowRect.right - pillowRect.width * inset);
+        }
+        if (extra > 0.5) {
+          const cur =
+            parseFloat(line.style.width) || line.getBoundingClientRect().width;
+          line.style.width = `${Math.round(cur + extra)}px`;
+        }
+      });
+    };
+
+    const isMobile = () => window.innerWidth < 992;
+    const SCROLL_EXTRA = isMobile() ? 0 : window.innerHeight * 1.5;
     const setSpacer = () => {
-      if (isMobile) spacer.style.height = "auto";
+      if (isMobile()) spacer.style.height = "auto";
       else spacer.style.height = section.offsetHeight + SCROLL_EXTRA + "px";
     };
     setSpacer();
@@ -75,7 +172,7 @@ export default function QualityExperience() {
 
     let target = 0;
     let current = 0;
-    const LERP = isMobile ? 0.015 : 0.08;
+    const LERP = isMobile() ? 0.015 : 0.08;
     let running = false;
 
     const update = (p) => {
@@ -107,6 +204,9 @@ export default function QualityExperience() {
           resetCount(n2, " in 3");
         }
       }
+
+      // Re-align after layers finish transitioning into place
+      requestAnimationFrame(alignHeadingsToLayers);
     };
 
     const tick = () => {
@@ -122,22 +222,48 @@ export default function QualityExperience() {
       }
     };
 
-    if (isMobile) {
+    const imgs = [img1, img2, img3, img4]
+      .map((el) => el?.querySelector("img"))
+      .filter(Boolean);
+    imgs.forEach((img) => {
+      if (img.complete) return;
+      img.addEventListener("load", alignHeadingsToLayers, { once: true });
+    });
+
+    if (isMobile()) {
+      const revealMobile = () => {
+        target = 1;
+        current = 1;
+        update(1);
+        // layers animate with CSS transition — align again after settle
+        window.setTimeout(alignHeadingsToLayers, 50);
+        window.setTimeout(alignHeadingsToLayers, 400);
+        window.setTimeout(alignHeadingsToLayers, 850);
+      };
       const observer = new IntersectionObserver(
         (entries) => {
           if (entries[0].isIntersecting) {
-            target = 1;
-            if (!running) {
-              running = true;
-              requestAnimationFrame(tick);
-            }
+            revealMobile();
             observer.disconnect();
           }
         },
-        { threshold: 0.2, rootMargin: "0px 0px -100px 0px" }
+        { threshold: 0.05, rootMargin: "0px" }
       );
       observer.observe(section);
-      return () => observer.disconnect();
+      if (section.getBoundingClientRect().top < window.innerHeight) {
+        revealMobile();
+        observer.disconnect();
+      }
+      const onResize = () => {
+        setSpacer();
+        alignHeadingsToLayers();
+      };
+      window.addEventListener("resize", onResize);
+      alignHeadingsToLayers();
+      return () => {
+        observer.disconnect();
+        window.removeEventListener("resize", onResize);
+      };
     }
 
     const onScroll = () => {
@@ -152,6 +278,7 @@ export default function QualityExperience() {
     const onResize = () => {
       setSpacer();
       onScroll();
+      alignHeadingsToLayers();
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
@@ -174,7 +301,7 @@ export default function QualityExperience() {
           </svg>
         </div>
         <div className="container">
-          <div className="dp-fab-stage">
+          <div className="dp-fab-stage" ref={stageRef}>
             <div className="dp-fab-pillow" ref={centerRef}>
               <div className="dp-fab-layer dp-fab-img4" ref={layerImg4Ref}>
                 <img src="/assets/febric-layer/Layer-4.png" alt="Bottom Fabric" />

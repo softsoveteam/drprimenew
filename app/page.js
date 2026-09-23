@@ -1,3 +1,4 @@
+import HomeFaqs from "@/components/home/HomeFaqs";
 import HomeFeature from "@/components/home/HomeFeature";
 import HomeProduct from "@/components/home/HomeProduct";
 import HomeTestimonials from "@/components/home/HomeTestimonials";
@@ -347,96 +348,7 @@ export default function HomePage() {
                     wake up feeling refreshed.
                   </p>
                 </div>
-                <div className="faq-accordion" id="accordion">
-                  <div className="accordion-item wow fadeInUp">
-                    <h2 className="accordion-header" id="heading1">
-                      <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                        What is the Dr.Prime Pillow?
-                      </button>
-                    </h2>
-                    <div id="collapse1" className="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#accordion">
-                      <div className="accordion-body">
-                        <figure className="image-anime">
-                          <img src="/assets/slider-pillow.png" alt="PrimeHeal pillow" />
-                        </figure>
-                        <p>
-                          The Dr.Prime Pillow is a premium orthopedic
-                          sleep pillow designed to support your head, neck, and
-                          shoulders. It is built with 60D high density memory foam
-                          and an ergonomic cervical contour that keeps your spine
-                          in proper alignment — whether you sleep on your side,
-                          back, or stomach.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="accordion-item wow fadeInUp" data-wow-delay="0.2s">
-                    <h2 className="accordion-header" id="heading2">
-                      <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                        Will it help with my neck, shoulder, and back pain from sleeping?
-                      </button>
-                    </h2>
-                    <div id="collapse2" className="accordion-collapse collapse show" aria-labelledby="heading2" data-bs-parent="#accordion">
-                      <div className="accordion-body">
-                        <figure className="image-anime">
-                          <img src="/assets/DSC07277-1.jpg" alt="Neck support" />
-                        </figure>
-                        <p>
-                          Yes. PrimeHeal is designed to address the root cause of
-                          sleep related neck and shoulder pain — poor spinal
-                          alignment. Most customers who switch from a flat pillow
-                          report noticeable reduction in morning stiffness within
-                          the first 1 to 2 weeks. Results vary by individual.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="accordion-item wow fadeInUp" data-wow-delay="0.4s">
-                    <h2 className="accordion-header" id="heading3">
-                      <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                        Will it improve my sleep quality?
-                      </button>
-                    </h2>
-                    <div id="collapse3" className="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#accordion">
-                      <div className="accordion-body">
-                        <figure className="image-anime">
-                          <img src="/assets/DSC06980.jpg" alt="Deeper sleep" />
-                        </figure>
-                        <p>
-                          When your body is properly supported, you spend more time
-                          in deep restorative sleep and less time shifting and
-                          waking. Add cooling fabric that prevents heat buildup and
-                          the result is a pillow that actively contributes to
-                          better sleep quality, not just comfort.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="accordion-item wow fadeInUp" data-wow-delay="0.6s">
-                    <h2 className="accordion-header" id="heading4">
-                      <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                        How is Dr.Prime Pillow different from other cervical pillows?
-                      </button>
-                    </h2>
-                    <div id="collapse4" className="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#accordion">
-                      <div className="accordion-body">
-                        <figure className="image-anime">
-                          <img src="/assets/built-for-section.png" alt="PrimeHeal difference" />
-                        </figure>
-                        <p>
-                          Most cervical pillows use low density uncertified foam.
-                          Dr.Prime Pillow uses 60D high density foam, CertiPUR-US
-                          certified foam, OEKO-TEX Standard 100 fabric, and ISPA
-                          recognition. Most pillows you find online have none of
-                          these. Dr.Prime Pillow has all three.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <HomeFaqs />
               </div>
             </div>
           </div>
