@@ -23,6 +23,7 @@ const nextConfig = {
       { source: "/pages/pillow", destination: "/product", permanent: true },
       { source: "/pages/faq", destination: "/faqs", permanent: true },
       { source: "/pages/contact", destination: "/contact", permanent: true },
+      { source: "/pages/sleep-guide", destination: "/sleep-guide", permanent: true },
     ];
   },
 };

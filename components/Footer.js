@@ -52,6 +52,9 @@ export default function Footer() {
                 <a href="/faqs">FAQs</a>
               </li>
               <li>
+                <a href="/sleep-guide">Sleep Guide</a>
+              </li>
+              <li>
                 <a href="/image-gallery">Gallery</a>
               </li>
               <li>
