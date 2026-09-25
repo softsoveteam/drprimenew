@@ -36,17 +36,16 @@ export default function ImageGalleryPage() {
       <div className="page-gallery">
         <div className="container">
           <div className="row gallery-items page-gallery-box">
-            {GALLERY_IMAGES.map((image, index) => (
+            {GALLERY_IMAGES.map((image) => (
               <div className="col-lg-4 col-6" key={image.src}>
-                <div className="photo-gallery wow fadeInUp">
+                <div className="photo-gallery">
                   <a href={image.src} data-cursor-text="View">
-                    <figure className="image-anime">
+                    <figure>
                       <img
-                        src={image.src}
+                        src={image.thumb}
                         alt={image.alt}
-                        loading={index < 3 ? "eager" : "lazy"}
+                        loading="lazy"
                         decoding="async"
-                        fetchPriority={index < 3 ? "high" : "low"}
                       />
                     </figure>
                   </a>

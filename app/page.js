@@ -9,6 +9,7 @@ import WhatYouGet from "@/components/home/WhatYouGet";
 import WhyDifferent from "@/components/home/WhyDifferent";
 import JsonLd from "@/components/JsonLd";
 import { homeSchema, pageMetadata } from "@/lib/seo";
+import { GALLERY_IMAGES } from "@/lib/content";
 
 export const metadata = pageMetadata("home");
 
@@ -378,41 +379,19 @@ export default function HomePage() {
           </div>
 
           <div className="row gallery-items">
-            <div className="col-lg-4 col-md-6">
-              <div className="post-item wow fadeInUp">
-                <div className="post-featured-image">
-                  <a href="/assets/DSC07101.jpg" data-cursor-text="View">
-                    <figure className="image-anime">
-                      <img src="/assets/DSC07101.jpg" alt="PrimeHeal sleep support" />
-                    </figure>
-                  </a>
+            {GALLERY_IMAGES.map((image, index) => (
+              <div className="col-lg-4 col-md-6" key={image.src}>
+                <div className="post-item wow fadeInUp" data-wow-delay={`${(index % 3) * 0.2}s`}>
+                  <div className="post-featured-image">
+                    <a href={image.src} data-cursor-text="View">
+                      <figure className="image-anime">
+                        <img src={image.thumb} alt={image.alt} loading="lazy" decoding="async" />
+                      </figure>
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div className="col-lg-4 col-md-6">
-              <div className="post-item wow fadeInUp" data-wow-delay="0.2s">
-                <div className="post-featured-image">
-                  <a href="/assets/DSC07277-1.jpg" data-cursor-text="View">
-                    <figure className="image-anime">
-                      <img src="/assets/DSC07277-1.jpg" alt="Neck support with PrimeHeal" />
-                    </figure>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-lg-4 col-md-6">
-              <div className="post-item wow fadeInUp" data-wow-delay="0.4s">
-                <div className="post-featured-image">
-                  <a href="/assets/DSC06980.jpg" data-cursor-text="View">
-                    <figure className="image-anime">
-                      <img src="/assets/DSC06980.jpg" alt="Couple sleeping with PrimeHeal" />
-                    </figure>
-                  </a>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
