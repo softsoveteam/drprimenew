@@ -36,7 +36,7 @@ export default function StickyBuyButton() {
       >
         <span className="dp-sticky-buy-info">
           <span className="dp-sticky-buy-name">The PrimeHeal</span>
-          <span className="dp-sticky-buy-price">$54.99</span>
+          <span className="dp-sticky-buy-price">$39.99</span>
         </span>
         <span className="dp-sticky-buy-label">
           <i className="fa-brands fa-amazon"></i>
