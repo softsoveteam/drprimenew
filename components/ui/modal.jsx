@@ -13,11 +13,16 @@ import { cn } from "@/lib/utils";
 export function Modal({ isOpen, onClose, title, description, children, className }) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose?.()}>
-      <DialogContent className={cn("max-w-lg rounded-2xl bg-white p-6 shadow-xl border border-slate-200", className)}>
+      <DialogContent
+        className={cn(
+          "max-w-md w-[calc(100%-2rem)] rounded-2xl bg-white p-5 sm:p-6 shadow-xl border border-slate-200 gap-3",
+          className
+        )}
+      >
         {(title || description) && (
-          <DialogHeader className="text-left space-y-1">
+          <DialogHeader className="text-left space-y-1 pr-6">
             {title && (
-              <DialogTitle className="text-lg font-bold text-slate-900 leading-6">
+              <DialogTitle className="text-lg font-bold text-slate-900 leading-6 font-sans">
                 {title}
               </DialogTitle>
             )}
@@ -28,7 +33,7 @@ export function Modal({ isOpen, onClose, title, description, children, className
             )}
           </DialogHeader>
         )}
-        <div className="pt-2">{children}</div>
+        <div className="w-full min-w-0">{children}</div>
       </DialogContent>
     </Dialog>
   );

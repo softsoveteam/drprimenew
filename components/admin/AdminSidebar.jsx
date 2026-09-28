@@ -5,16 +5,23 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAdminStore } from "@/lib/store/useAdminStore";
 import { useAdminLogout } from "@/hooks/useAdminAuth";
+import { useAdminShopFeature } from "@/hooks/useAdminShopFeature";
+import { isAdminShopPath } from "@/lib/shop-paths";
 import {
   LayoutDashboard,
   FileText,
-  FolderTree,
   Inbox,
   HelpCircle,
+  MessageCircle,
   ShieldCheck,
   ExternalLink,
   PanelLeftClose,
   PanelLeftOpen,
+  Settings,
+  Store,
+  Package,
+  ShoppingBag,
+  Users,
 } from "lucide-react";
 
 const NAV_GROUPS = [
@@ -29,6 +36,26 @@ const NAV_GROUPS = [
     ],
   },
   {
+    label: "Shop",
+    items: [
+      {
+        title: "Products",
+        href: "/auth-cp/products",
+        icon: Package,
+      },
+      {
+        title: "Orders",
+        href: "/auth-cp/orders",
+        icon: ShoppingBag,
+      },
+      {
+        title: "Users",
+        href: "/auth-cp/users",
+        icon: Users,
+      },
+    ],
+  },
+  {
     label: "Content & Catalog",
     items: [
       {
@@ -37,14 +64,14 @@ const NAV_GROUPS = [
         icon: FileText,
       },
       {
-        title: "Areas Management",
-        href: "/auth-cp/areas",
-        icon: FolderTree,
-      },
-      {
         title: "FAQs & Knowledge",
         href: "/auth-cp/faqs",
         icon: HelpCircle,
+      },
+      {
+        title: "Chat Bot Questions",
+        href: "/auth-cp/bot-questions",
+        icon: MessageCircle,
       },
     ],
   },
@@ -63,11 +90,36 @@ const NAV_GROUPS = [
       },
     ],
   },
+  {
+    label: "Configuration",
+    items: [
+      {
+        title: "Settings",
+        href: "/auth-cp/settings",
+        icon: Settings,
+      },
+    ],
+  },
+  {
+    label: "Features",
+    items: [
+      {
+        title: "Shop Feature",
+        href: "/auth-cp/shop-feature",
+        icon: Store,
+      },
+    ],
+  },
 ];
 
 export default function AdminSidebar() {
   const pathname = usePathname();
   const { isSidebarOpen, toggleSidebar, admin } = useAdminStore();
+  const { shopEnabled } = useAdminShopFeature();
+  const navGroups = NAV_GROUPS.map((group) => ({
+    ...group,
+    items: group.items.filter((item) => shopEnabled || !isAdminShopPath(item.href)),
+  })).filter((group) => group.items.length > 0);
 
   const currentAdmin = admin;
   const initials = currentAdmin?.name
@@ -142,7 +194,7 @@ export default function AdminSidebar() {
         {/* Navigation */}
         <div className="flex-1 py-3 scrollbar-thin">
           <nav className={cn("flex flex-col gap-2", isSidebarOpen ? "px-2.5" : "px-1.5")}>
-            {NAV_GROUPS.map((group, groupIdx) => (
+            {navGroups.map((group, groupIdx) => (
               <div key={groupIdx}>
                 {/* Group Label */}
                 {isSidebarOpen && (

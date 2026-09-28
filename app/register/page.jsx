@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -23,10 +24,12 @@ const registerSchema = z
     path: ["password_confirmation"],
   });
 
-export default function UserRegisterPage() {
+function UserRegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const registerMutation = useUserRegister();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/profile";
+  const registerMutation = useUserRegister({ redirectTo });
 
   const {
     register,
@@ -199,7 +202,11 @@ export default function UserRegisterPage() {
             <p className="text-sm text-[#4a4a6a]">
               Already have an account?{" "}
               <Link
-                href="/login"
+                href={
+                  redirectTo && redirectTo !== "/profile"
+                    ? `/login?redirect=${encodeURIComponent(redirectTo)}`
+                    : "/login"
+                }
                 className="font-semibold text-[#1d1c50] hover:text-[#c9b896] transition-colors underline underline-offset-4"
               >
                 Sign In
@@ -209,5 +216,19 @@ export default function UserRegisterPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function UserRegisterPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen pt-32 pb-20 px-4 bg-[#f8f5ed] flex justify-center items-center">
+          <Loader2 className="w-10 h-10 animate-spin text-[#1d1c50]" />
+        </main>
+      }
+    >
+      <UserRegisterForm />
+    </Suspense>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -16,9 +17,11 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
-export default function UserLoginPage() {
+function UserLoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const loginMutation = useUserLogin();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/profile";
+  const loginMutation = useUserLogin({ redirectTo });
 
   const {
     register,
@@ -144,7 +147,11 @@ export default function UserLoginPage() {
             <p className="text-sm text-[#4a4a6a]">
               Don&apos;t have an account yet?{" "}
               <Link
-                href="/register"
+                href={
+                  redirectTo && redirectTo !== "/profile"
+                    ? `/register?redirect=${encodeURIComponent(redirectTo)}`
+                    : "/register"
+                }
                 className="font-semibold text-[#1d1c50] hover:text-[#c9b896] transition-colors underline underline-offset-4"
               >
                 Create Account
@@ -154,5 +161,19 @@ export default function UserLoginPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function UserLoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen pt-32 pb-20 px-4 bg-[#f8f5ed] flex justify-center items-center">
+          <Loader2 className="w-10 h-10 animate-spin text-[#1d1c50]" />
+        </main>
+      }
+    >
+      <UserLoginForm />
+    </Suspense>
   );
 }

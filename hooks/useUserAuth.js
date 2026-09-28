@@ -4,13 +4,33 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { userAuthService } from "@/services/user-auth.service";
 import { useUserStore } from "@/lib/store/useUserStore";
+import {
+  mergeGuestCart,
+  getStoredGuestToken,
+  clearStoredGuestToken,
+} from "@/services/cart.service";
 import toast from "react-hot-toast";
+
+async function mergeGuestCartAfterAuth(queryClient) {
+  const guestToken = getStoredGuestToken();
+  if (!guestToken) return;
+
+  try {
+    await mergeGuestCart(guestToken);
+  } catch (err) {
+    console.warn("Guest cart merge failed:", err);
+    // Still drop guest token so we don't keep a stale cart identity
+    clearStoredGuestToken();
+  }
+
+  queryClient.invalidateQueries({ queryKey: ["cart"] });
+}
 
 /**
  * Hook to register a new user
- * Corresponds to API spec 1.1: POST /user/register
+ * @param {{ redirectTo?: string }} [options]
  */
-export function useUserRegister() {
+export function useUserRegister(options = {}) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { setAuth } = useUserStore();
@@ -19,15 +39,20 @@ export function useUserRegister() {
     mutationFn: async (payload) => {
       return await userAuthService.register(payload);
     },
-    onSuccess: (res) => {
+    onSuccess: async (res) => {
       const userData = res?.data?.user || res?.user;
       const token = res?.data?.token || res?.token;
       if (userData && token) {
         setAuth(userData, token);
         queryClient.invalidateQueries({ queryKey: ["user", "me"] });
+        await mergeGuestCartAfterAuth(queryClient);
       }
       toast.success(res?.message || "Registration successful!");
-      router.push("/profile");
+      const redirect =
+        options.redirectTo && options.redirectTo.startsWith("/")
+          ? options.redirectTo
+          : "/profile";
+      router.push(redirect);
     },
     onError: (err) => {
       toast.error(err?.message || "Registration failed. Please try again.");
@@ -37,9 +62,9 @@ export function useUserRegister() {
 
 /**
  * Hook to log in an existing user
- * Corresponds to API spec 1.2: POST /user/login
+ * @param {{ redirectTo?: string }} [options]
  */
-export function useUserLogin() {
+export function useUserLogin(options = {}) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { setAuth } = useUserStore();
@@ -48,15 +73,20 @@ export function useUserLogin() {
     mutationFn: async (credentials) => {
       return await userAuthService.login(credentials);
     },
-    onSuccess: (res) => {
+    onSuccess: async (res) => {
       const userData = res?.data?.user || res?.user;
       const token = res?.data?.token || res?.token;
       if (userData && token) {
         setAuth(userData, token);
         queryClient.invalidateQueries({ queryKey: ["user", "me"] });
+        await mergeGuestCartAfterAuth(queryClient);
       }
       toast.success(res?.message || "Logged in successfully!");
-      router.push("/profile");
+      const redirect =
+        options.redirectTo && options.redirectTo.startsWith("/")
+          ? options.redirectTo
+          : "/profile";
+      router.push(redirect);
     },
     onError: (err) => {
       toast.error(err?.message || "Login failed. Please check your credentials.");
@@ -66,10 +96,9 @@ export function useUserLogin() {
 
 /**
  * Hook to fetch the currently authenticated user profile
- * Corresponds to API spec 1.3: GET /user/me
  */
 export function useUserProfile() {
-  const { setUser, token, isAuthenticated } = useUserStore();
+  const { setUser, token } = useUserStore();
 
   return useQuery({
     queryKey: ["user", "me"],
@@ -82,8 +111,8 @@ export function useUserProfile() {
       return userData;
     },
     enabled: !!token || (typeof window !== "undefined" && !!localStorage.getItem("user_token")),
-    staleTime: 1000 * 60 * 15, // 15 minutes
-    gcTime: 1000 * 60 * 30, // 30 minutes
+    staleTime: 1000 * 60 * 15,
+    gcTime: 1000 * 60 * 30,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     retry: 1,
@@ -92,7 +121,6 @@ export function useUserProfile() {
 
 /**
  * Hook to perform user logout
- * Corresponds to API spec 1.4: POST /user/logout
  */
 export function useUserLogout() {
   const router = useRouter();
@@ -111,6 +139,7 @@ export function useUserLogout() {
     onSettled: () => {
       logout();
       queryClient.removeQueries({ queryKey: ["user"] });
+      queryClient.removeQueries({ queryKey: ["cart"] });
       toast.success("Logged out successfully");
       router.push("/login");
     },

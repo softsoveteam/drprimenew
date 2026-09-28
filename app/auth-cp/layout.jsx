@@ -1,19 +1,29 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAdminStore } from "@/lib/store/useAdminStore";
 import AdminGuard from "@/components/admin/AdminGuard";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
 import { Toaster } from "react-hot-toast";
+import { useAdminShopFeature } from "@/hooks/useAdminShopFeature";
+import { isAdminShopPath } from "@/lib/shop-paths";
 
 export default function AuthCpLayout({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { isSidebarOpen } = useAdminStore();
-
-  // If on login or root redirect page, do not render sidebar/header
   const isAuthPage = pathname === "/auth-cp/login" || pathname === "/auth-cp";
+  const { shopEnabled, isFetched } = useAdminShopFeature(!isAuthPage);
+  const hideShopPage = !isAuthPage && isAdminShopPath(pathname) && (!isFetched || !shopEnabled);
+
+  useEffect(() => {
+    if (!isAuthPage && isAdminShopPath(pathname) && isFetched && !shopEnabled) {
+      router.replace("/auth-cp/dashboard");
+    }
+  }, [isAuthPage, pathname, isFetched, shopEnabled, router]);
 
   if (isAuthPage) {
     return <div className="min-h-screen bg-slate-50 text-slate-900">{children}</div>;
@@ -37,7 +47,7 @@ export default function AuthCpLayout({ children }) {
 
           {/* Page Content Container */}
           <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto animate-in fade-in-50 space-y-6">
-            {children}
+            {hideShopPage ? null : children}
           </main>
 
           {/* Admin Footer */}

@@ -16,8 +16,14 @@ const Select = React.forwardRef(({ className, children, value, onChange, default
       label: child.props.children,
     }));
 
-  // State for the currently selected value
-  const [internalValue, setInternalValue] = useState(value || defaultValue || (options[0]?.value ?? ""));
+  // State for the currently selected value — allow empty string (e.g. "All")
+  const [internalValue, setInternalValue] = useState(
+    value !== undefined && value !== null
+      ? value
+      : defaultValue !== undefined && defaultValue !== null
+      ? defaultValue
+      : (options[0]?.value ?? "")
+  );
 
   // Ref for the hidden native select
   const nativeSelectRef = useRef(null);

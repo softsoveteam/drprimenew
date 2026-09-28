@@ -379,7 +379,7 @@ export default function HomePage() {
           </div>
 
           <div className="row gallery-items">
-            {GALLERY_IMAGES.map((image, index) => (
+            {GALLERY_IMAGES.slice(0, 3).map((image, index) => (
               <div className="col-lg-4 col-md-6" key={image.src}>
                 <div className="post-item wow fadeInUp" data-wow-delay={`${(index % 3) * 0.2}s`}>
                   <div className="post-featured-image">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageTicker from "@/components/PageTicker";
 import BodyDesignCircle from "@/components/product/BodyDesignCircle";
 import {
@@ -117,6 +117,10 @@ export default function ProductPage() {
     setColor(next);
     setActive(0);
   };
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("dp-buy-link", { detail: amazon }));
+  }, [amazon]);
 
   return (
     <>

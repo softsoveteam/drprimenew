@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useScrollReveal from "./useScrollReveal";
 
 const BLUE_THUMBS = [
@@ -41,6 +41,10 @@ export default function HomeProduct() {
     setColor(c);
     setActive(0);
   };
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("dp-buy-link", { detail: amazon }));
+  }, [amazon]);
 
   return (
     <section className="dp-product">

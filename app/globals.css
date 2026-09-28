@@ -18,6 +18,12 @@ body.dp-nav-lock {
   overflow: hidden;
 }
 
+/* Site template sets p { margin-bottom: 1.5em } which breaks admin table cells */
+table td p,
+table th p {
+  margin-bottom: 0;
+}
+
 /* Tailwind's .collapse { visibility: collapse } hides Bootstrap FAQ answers
    after they open. Keep accordion panels visible once expanded. */
 .collapse,
@@ -146,5 +152,12 @@ body.dp-nav-lock {
 * {
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
+}
+
+/* TinyMCE free editor — keep toolbars/menus above admin modals */
+.tox-tinymce-aux,
+.tox-dialog-wrap,
+.tox-dialog {
+  z-index: 10050 !important;
 }
 
