@@ -116,10 +116,11 @@ const Select = React.forwardRef(({ className, children, value, onChange, default
       {isOpen && typeof document !== 'undefined' && createPortal(
         <div
           ref={dropdownRef}
-          className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto py-1 animate-in fade-in zoom-in-95 duration-100"
+          data-select-dropdown=""
+          className="fixed z-[80] mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto py-1 pointer-events-auto animate-in fade-in zoom-in-95 duration-100"
           style={{
-            top: containerRef.current ? containerRef.current.getBoundingClientRect().bottom + window.scrollY : 0,
-            left: containerRef.current ? containerRef.current.getBoundingClientRect().left + window.scrollX : 0,
+            top: containerRef.current ? containerRef.current.getBoundingClientRect().bottom + 4 : 0,
+            left: containerRef.current ? containerRef.current.getBoundingClientRect().left : 0,
             width: containerRef.current ? containerRef.current.getBoundingClientRect().width : 'auto',
           }}
         >
@@ -130,8 +131,12 @@ const Select = React.forwardRef(({ className, children, value, onChange, default
               const isSelected = opt.value === internalValue;
               return (
                 <div
-                  key={i}
-                  onClick={() => handleSelect(opt.value)}
+                  key={opt.value ?? i}
+                  onMouseDown={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    handleSelect(opt.value);
+                  }}
                   className={cn(
                     "flex items-center justify-between px-4 py-2.5 text-sm cursor-pointer mx-1 rounded-md transition-colors",
                     isSelected 

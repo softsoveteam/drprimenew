@@ -15,10 +15,14 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
+import { Select } from "@/components/ui/select";
+import { FAQ_CATEGORIES } from "@/lib/content";
+import { joinFaqCategory, splitFaqCategory } from "@/lib/faq-category";
 
 const faqSchema = z.object({
   question: z.string().min(1, "Question is required").max(500, "Max 500 characters"),
   answer: z.string().min(1, "Answer is required").max(5000, "Max 5000 characters"),
+  category: z.enum(["quality", "care", "sleep"]).default("quality"),
   sort_order: z.coerce.number().min(0, "Sort order must be 0 or greater").default(0),
   is_active: z.boolean().default(true),
 });
@@ -59,6 +63,7 @@ export default function FaqsPage() {
     defaultValues: {
       question: "",
       answer: "",
+      category: "quality",
       sort_order: 0,
       is_active: true,
     },
@@ -68,9 +73,11 @@ export default function FaqsPage() {
   const handleOpenModal = (faq = null) => {
     setEditingFaq(faq);
     if (faq) {
+      const parsed = splitFaqCategory(faq.answer);
       reset({
         question: faq.question || "",
-        answer: faq.answer || "",
+        answer: parsed.answer,
+        category: parsed.category,
         sort_order: faq.sort_order ?? 0,
         is_active: Boolean(faq.is_active),
       });
@@ -78,6 +85,7 @@ export default function FaqsPage() {
       reset({
         question: "",
         answer: "",
+        category: "quality",
         sort_order: 0,
         is_active: true,
       });
@@ -131,10 +139,16 @@ export default function FaqsPage() {
   });
 
   const onSubmit = (formData) => {
+    const payload = {
+      question: formData.question,
+      answer: joinFaqCategory(formData.answer, formData.category),
+      sort_order: formData.sort_order,
+      is_active: formData.is_active,
+    };
     if (editingFaq) {
-      updateMutation.mutate(formData);
+      updateMutation.mutate(payload);
     } else {
-      createMutation.mutate(formData);
+      createMutation.mutate(payload);
     }
   };
 
@@ -152,10 +166,23 @@ export default function FaqsPage() {
             <span>{row.question}</span>
           </div>
           <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed pl-5">
-            {row.answer}
+            {splitFaqCategory(row.answer).answer}
           </p>
         </div>
       ),
+    },
+    {
+      header: "Category",
+      id: "category",
+      render: (row) => {
+        const category = splitFaqCategory(row.answer).category;
+        const label = FAQ_CATEGORIES.find((item) => item.key === category)?.label || "Product Quality";
+        return (
+          <span className="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100 whitespace-nowrap">
+            {label}
+          </span>
+        );
+      },
     },
     {
       header: "Sort Order",
@@ -286,6 +313,30 @@ export default function FaqsPage() {
             {errors.answer && (
               <p className="text-[11px] text-rose-500 font-medium">{errors.answer.message}</p>
             )}
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="category">Category <span className="text-rose-500">*</span></Label>
+            <Controller
+              name="category"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  id="category"
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.target.value)}
+                >
+                  {FAQ_CATEGORIES.map((item) => (
+                    <option key={item.key} value={item.key}>
+                      {item.label}
+                    </option>
+                  ))}
+                </Select>
+              )}
+            />
+            <p className="text-[11px] text-slate-500">
+              This FAQ shows under the selected tab on the public FAQs page.
+            </p>
           </div>
 
           {/* Sort Order & Active */}

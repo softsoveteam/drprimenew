@@ -4,6 +4,7 @@ import { useState } from "react";
 import PageTicker from "@/components/PageTicker";
 import { usePublicFaqs } from "@/hooks/usePublicFaqs";
 import { FAQ_CATEGORIES, FAQS as FALLBACK_FAQS } from "@/lib/content";
+import { splitFaqCategory } from "@/lib/faq-category";
 import { Search, Loader2 } from "lucide-react";
 
 export default function FaqPage({ initialFaqs = null }) {
@@ -23,8 +24,15 @@ export default function FaqPage({ initialFaqs = null }) {
     }
   );
 
-  const apiFaqs = faqsData?.data || [];
+  const apiFaqs = (faqsData?.data || [])
+    .map((faq) => {
+      const parsed = splitFaqCategory(faq.answer);
+      return { ...faq, category: parsed.category, answer: parsed.answer };
+    })
+    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+  const isSearching = searchQuery.trim().length > 0;
   const hasApiFaqs = apiFaqs.length > 0;
+  const visibleFaqs = isSearching ? apiFaqs : apiFaqs.filter((faq) => faq.category === cat);
 
   // Static fallback filtering if API returned empty
   const fallbackItems = FALLBACK_FAQS.filter((faq) => faq.cat === cat);
@@ -91,7 +99,7 @@ export default function FaqPage({ initialFaqs = null }) {
             </div>
           </div>
 
-          {!searchQuery && !hasApiFaqs && (
+          {!isSearching && (
             <div className="dp-faq-cats">
               {FAQ_CATEGORIES.map((item) => (
                 <button
@@ -118,20 +126,26 @@ export default function FaqPage({ initialFaqs = null }) {
           ) : (
             <div className="dp-faq-list">
               {hasApiFaqs ? (
-                apiFaqs.map((faq, i) => (
-                  <article key={faq.id || i} className={`dp-faq-item${open === i ? " is-open" : ""}`}>
-                    <button type="button" onClick={() => setOpen(open === i ? -1 : i)}>
-                      <h3>{faq.question}</h3>
-                      <i className={`fa-solid fa-chevron-${open === i ? "up" : "down"}`}></i>
-                    </button>
-                    {open === i ? (
-                      <div className="dp-faq-answer">
-                        <p>{faq.answer}</p>
-                      </div>
-                    ) : null}
-                  </article>
-                ))
-              ) : fallbackItems.length > 0 ? (
+                visibleFaqs.length > 0 ? (
+                  visibleFaqs.map((faq, i) => (
+                    <article key={faq.id || i} className={`dp-faq-item${open === i ? " is-open" : ""}`}>
+                      <button type="button" onClick={() => setOpen(open === i ? -1 : i)}>
+                        <h3>{faq.question}</h3>
+                        <i className={`fa-solid fa-chevron-${open === i ? "up" : "down"}`}></i>
+                      </button>
+                      {open === i ? (
+                        <div className="dp-faq-answer">
+                          <p>{faq.answer}</p>
+                        </div>
+                      ) : null}
+                    </article>
+                  ))
+                ) : (
+                  <div className="text-center py-12">
+                    <p className="text-[#4a4a6a] font-medium">No FAQs in this category yet.</p>
+                  </div>
+                )
+              ) : !isSearching && fallbackItems.length > 0 ? (
                 fallbackItems.map((faq, i) => (
                   <article key={faq.q || i} className={`dp-faq-item${open === i ? " is-open" : ""}`}>
                     <button type="button" onClick={() => setOpen(open === i ? -1 : i)}>
