@@ -19,6 +19,7 @@ export default function FaqPage({ initialFaqs = null }) {
     },
     {
       initialData: !searchQuery && initialFaqs ? initialFaqs : undefined,
+      initialDataUpdatedAt: 0,
     }
   );
 

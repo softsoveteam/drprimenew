@@ -3,6 +3,10 @@ import JsonLd from "@/components/JsonLd";
 import { faqsSchema, pageMetadata } from "@/lib/seo";
 import { publicFaqService } from "@/services/public-faq.service";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
+
 export const metadata = pageMetadata("faqs");
 
 export default async function FaqsRoute() {

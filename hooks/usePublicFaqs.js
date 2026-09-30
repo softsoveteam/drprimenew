@@ -16,8 +16,11 @@ export function usePublicFaqs({ search = "", page = 1, per_page = 50 } = {}, opt
       // response unwrap gives { success, message, data: { current_page, data: [...], total, per_page } }
       return response?.data || response;
     },
-    staleTime: 1000 * 60 * 15, // 15 minutes
     ...options,
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
 }
 
@@ -36,6 +39,9 @@ export function usePublicFaq(id) {
       return response?.data?.faq || response?.faq || response?.data;
     },
     enabled: !!id,
-    staleTime: 1000 * 60 * 15, // 15 minutes
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
 }

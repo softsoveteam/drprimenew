@@ -7,7 +7,13 @@ export const publicFaqService = {
    * @param {Object} params - { search, page, per_page }
    */
   getFaqs: async (params) => {
-    return await api.get("/faqs", { params });
+    return await api.get("/faqs", {
+      params: { ...params, _t: Date.now() },
+      headers: {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+      },
+    });
   },
 
   /**
