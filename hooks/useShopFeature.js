@@ -21,7 +21,8 @@ export function useShopFeature() {
       const response = await featureService.getFeatures();
       return response?.data || { shop_enabled: false };
     },
-    staleTime: 0,
+    staleTime: 30_000,
+    retry: false,
   });
 
   useEffect(() => {

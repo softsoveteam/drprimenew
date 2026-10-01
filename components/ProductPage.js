@@ -197,7 +197,14 @@ export default function ProductPage() {
               </div>
               <h2>The PrimeHeal</h2>
               <p className="dp-prod-sub">Shaped for you. Out of the box.</p>
-              <div className="dp-prod-price">$39.99</div>
+              <div className="dp-prod-pricing">
+                <span className="dp-prod-price-low">Lowest price in 30 days</span>
+                <div className="dp-prod-price-row">
+                  <span className="dp-prod-price-off">-20%</span>
+                  <span className="dp-prod-price">$39.99</span>
+                </div>
+                <p className="dp-prod-price-typical">Typical price: $49.99</p>
+              </div>
               <p className="dp-prod-desc">
                 Experience the ultimate in neck support and spinal alignment.
                 The PrimeHeal is engineered with premium memory foam to relieve

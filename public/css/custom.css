@@ -9061,6 +9061,47 @@ header.main-header.dp-header .slicknav_nav .slicknav_row:hover{
 .dp-prod-info h2 { color: var(--primary-color); margin-bottom: 6px; }
 .dp-prod-sub { color: var(--text-color); margin-bottom: 10px; }
 .dp-prod-price { font-size: 2rem; color: var(--primary-color); font-weight: 700; margin-bottom: 16px; }
+.dp-prod-pricing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.dp-prod-price-low {
+  display: inline-block;
+  margin: 0;
+  padding: 5px 10px 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: #fff;
+  background: #e10600;
+  border-radius: 4px;
+}
+.dp-prod-price-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+.dp-prod-pricing .dp-prod-price {
+  margin-bottom: 0;
+  font-weight: 800;
+  color: #1a1a1a;
+  line-height: 1;
+}
+.dp-prod-price-off {
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1;
+  color: #e10600;
+}
+.dp-prod-price-typical {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #6b7280;
+}
 .dp-prod-desc { color: var(--text-color); margin-bottom: 22px; }
 .dp-prod-colors { display: flex; gap: 12px; margin-bottom: 24px; }
 .dp-prod-colors button {

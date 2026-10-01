@@ -24,6 +24,9 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [{ source: "/favicon.ico", destination: "/images/favicon.png" }];
+  },
   async redirects() {
     return [
       {
