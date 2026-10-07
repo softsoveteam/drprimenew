@@ -235,6 +235,12 @@ body{
 	z-index: 1;
 }
 
+.btn-default.is-disabled{
+	opacity: 0.55;
+	pointer-events: none;
+	cursor: not-allowed;
+}
+
 .btn-default::before{
 	content: '';
 	position: absolute;
@@ -9102,6 +9108,12 @@ header.main-header.dp-header .slicknav_nav .slicknav_row:hover{
   font-weight: 500;
   color: #6b7280;
 }
+.dp-prod-stock {
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.dp-prod-stock.is-out { color: #e10600; }
 .dp-prod-desc { color: var(--text-color); margin-bottom: 22px; }
 .dp-prod-colors { display: flex; gap: 12px; margin-bottom: 24px; }
 .dp-prod-colors button {
@@ -9754,7 +9766,7 @@ header.main-header.dp-header .slicknav_nav .slicknav_row:hover{
   pointer-events: auto;
 }
 
-.dp-sticky-buy a {
+.dp-sticky-buy .dp-sticky-buy-link {
   display: inline-flex;
   align-items: center;
   gap: 14px;
@@ -9764,6 +9776,11 @@ header.main-header.dp-header .slicknav_nav .slicknav_row:hover{
   border-radius: 999px;
   padding: 10px 10px 10px 22px;
   box-shadow: none;
+}
+
+.dp-sticky-buy .dp-sticky-buy-link.is-disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
 }
 
 .dp-sticky-buy-info {
@@ -9829,7 +9846,7 @@ header.main-header.dp-header .slicknav_nav .slicknav_row:hover{
 }
 
 @media (max-width: 575px) {
-  .dp-sticky-buy a {
+  .dp-sticky-buy .dp-sticky-buy-link {
     min-width: 100%;
   }
 }

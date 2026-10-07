@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { AMAZON_URL, PRODUCT_PRICE } from "@/lib/seo";
+import { AMAZON_URL } from "@/lib/seo";
+import { useProductDetails } from "@/hooks/useProductDetails";
 
 export default function StickyBuyButton() {
   const [visible, setVisible] = useState(false);
   const [buyLink, setBuyLink] = useState(AMAZON_URL);
   const pathname = usePathname();
+  const { offer } = useProductDetails();
 
   useEffect(() => {
     const onBuyLink = (event) => {
@@ -53,13 +55,29 @@ export default function StickyBuyButton() {
 
   return (
     <div className={`dp-sticky-buy${visible ? " is-visible" : ""}`} aria-hidden={!visible}>
-      <a href={buyLink} target="_blank" rel="noopener noreferrer" tabIndex={visible ? 0 : -1}>
-        <span className="dp-sticky-buy-meta">
-          <span className="dp-sticky-buy-name">PrimeHeal Pillow</span>
-          <span className="dp-sticky-buy-price">${PRODUCT_PRICE}</span>
+      {offer.inStock ? (
+        <a
+          className="dp-sticky-buy-link"
+          href={buyLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          tabIndex={visible ? 0 : -1}
+        >
+          <span className="dp-sticky-buy-meta">
+            <span className="dp-sticky-buy-name">PrimeHeal Pillow</span>
+            <span className="dp-sticky-buy-price">{offer.priceLabel || "$39.99"}</span>
+          </span>
+          <span className="dp-sticky-buy-label">Buy Now</span>
+        </a>
+      ) : (
+        <span className="dp-sticky-buy-link is-disabled" aria-disabled="true">
+          <span className="dp-sticky-buy-meta">
+            <span className="dp-sticky-buy-name">PrimeHeal Pillow</span>
+            <span className="dp-sticky-buy-price">{offer.priceLabel || "$39.99"}</span>
+          </span>
+          <span className="dp-sticky-buy-label">Out of Stock</span>
         </span>
-        <span className="dp-sticky-buy-label">Buy Now</span>
-      </a>
+      )}
     </div>
   );
 }

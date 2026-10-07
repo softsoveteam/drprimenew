@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import useScrollReveal from "./useScrollReveal";
+import ProductOffer from "@/components/product/ProductOffer";
+import StoreBuyLink from "@/components/product/StoreBuyLink";
+import { useProductDetails } from "@/hooks/useProductDetails";
 
 const BLUE_THUMBS = [
   "/assets/sky-blue/01.jpg",
@@ -32,6 +35,7 @@ export default function HomeProduct() {
   const [color, setColor] = useState("blue");
   const [active, setActive] = useState(0);
   const thumbs = color === "grey" ? GRAY_THUMBS : BLUE_THUMBS;
+  const { offer } = useProductDetails();
   const amazon =
     color === "grey"
       ? "https://www.amazon.com/dp/B0GX61KHFF"
@@ -91,13 +95,7 @@ export default function HomeProduct() {
             </div>
             <h2>The PrimeHeal</h2>
             <p className="dp-prod-sub">Shaped for you. Out of the box.</p>
-            <div className="dp-prod-price">$39.99</div>
-            <p className="dp-prod-desc">
-              Experience the ultimate in neck support and spinal alignment.
-              The PrimeHeal is engineered with premium memory foam to relieve
-              pressure, reduce morning stiffness, and ensure a deep, restorative
-              sleep.
-            </p>
+            <ProductOffer offer={offer} />
 
             <div className="dp-prod-colors">
               <button
@@ -118,9 +116,9 @@ export default function HomeProduct() {
               </button>
             </div>
 
-            <a href={amazon} target="_blank" rel="noopener noreferrer" className="btn-default">
+            <StoreBuyLink href={amazon} inStock={offer.inStock}>
               Buy Now
-            </a>
+            </StoreBuyLink>
 
             <ul className="dp-prod-features">
               {FEATURES.map((f) => (

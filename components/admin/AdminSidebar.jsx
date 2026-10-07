@@ -22,6 +22,7 @@ import {
   Package,
   ShoppingBag,
   Users,
+  Tag,
 } from "lucide-react";
 
 const NAV_GROUPS = [
@@ -58,6 +59,11 @@ const NAV_GROUPS = [
   {
     label: "Content & Catalog",
     items: [
+      {
+        title: "Product Details",
+        href: "/auth-cp/product-details",
+        icon: Tag,
+      },
       {
         title: "Articles & Blog",
         href: "/auth-cp/articles",

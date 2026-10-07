@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import PageTicker from "@/components/PageTicker";
 import BodyDesignCircle from "@/components/product/BodyDesignCircle";
+import ProductOffer from "@/components/product/ProductOffer";
+import StoreBuyLink from "@/components/product/StoreBuyLink";
+import { useProductDetails } from "@/hooks/useProductDetails";
 import {
   CUSTOMER_SAY_REVIEWS,
   PRODUCT_FAQS,
@@ -107,6 +110,7 @@ export default function ProductPage() {
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(-1);
   const thumbs = color === "grey" ? GRAY_THUMBS : BLUE_THUMBS;
+  const { offer } = useProductDetails();
   const amazon =
     color === "grey"
       ? "https://www.amazon.com/dp/B0GX61KHFF"
@@ -197,20 +201,7 @@ export default function ProductPage() {
               </div>
               <h2>The PrimeHeal</h2>
               <p className="dp-prod-sub">Shaped for you. Out of the box.</p>
-              <div className="dp-prod-pricing">
-                <span className="dp-prod-price-low">Lowest price in 30 days</span>
-                <div className="dp-prod-price-row">
-                  <span className="dp-prod-price-off">-20%</span>
-                  <span className="dp-prod-price">$39.99</span>
-                </div>
-                <p className="dp-prod-price-typical">Typical price: $49.99</p>
-              </div>
-              <p className="dp-prod-desc">
-                Experience the ultimate in neck support and spinal alignment.
-                The PrimeHeal is engineered with premium memory foam to relieve
-                pressure, reduce morning stiffness, and ensure a deep, restorative
-                sleep.
-              </p>
+              <ProductOffer offer={offer} />
               <div className="dp-prod-colors">
                 <button type="button" className={color === "blue" ? "is-active" : ""} onClick={() => onColor("blue")}>
                   <span className="dp-swatch blue"></span>
@@ -221,9 +212,9 @@ export default function ProductPage() {
                   Cool Grey
                 </button>
               </div>
-              <a href={amazon} target="_blank" rel="noopener noreferrer" className="btn-default">
+              <StoreBuyLink href={amazon} inStock={offer.inStock}>
                 <i className="fa-brands fa-amazon"></i> Buy Now
-              </a>
+              </StoreBuyLink>
               <ul className="dp-prod-features">
                 {FEATURES.map((feature) => (
                   <li key={feature.text}>

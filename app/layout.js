@@ -99,7 +99,7 @@ export default function RootLayout({ children }) {
         <link href="/css/all.min.css" rel="stylesheet" media="screen" />
         <link href="/css/animate.css" rel="stylesheet" />
         <link href="/css/magnific-popup.css" rel="stylesheet" />
-        <link href="/css/custom.css?v=price-badge" rel="stylesheet" media="screen" />
+        <link href="/css/custom.css?v=product-details" rel="stylesheet" media="screen" />
         <link href="/css/chatbot.css" rel="stylesheet" media="screen" />
       </head>
       <body>

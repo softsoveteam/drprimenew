@@ -7,6 +7,8 @@ import { useUserStore } from "@/lib/store/useUserStore";
 import { useUserLogout } from "@/hooks/useUserAuth";
 import { useCart } from "@/hooks/useCart";
 import { useShopFeature } from "@/hooks/useShopFeature";
+import { useProductDetails } from "@/hooks/useProductDetails";
+import StoreBuyLink from "@/components/product/StoreBuyLink";
 import { AMAZON_URL } from "@/lib/seo";
 import {
   ShoppingBag,
@@ -37,6 +39,7 @@ export default function Header() {
   const logoutMutation = useUserLogout();
   const loggedIn = isAuthenticated || !!token;
   const { shopEnabled } = useShopFeature();
+  const { offer } = useProductDetails();
   const { data: cartData } = useCart({ enabled: shopEnabled });
   const navLinks = NAV_LINKS.filter((item) => shopEnabled || !item.shop);
   const summary = cartData?.summary || cartData?.data?.summary;
@@ -191,9 +194,9 @@ export default function Header() {
                   </>
                 ) : null}
 
-                <a href={AMAZON_URL} target="_blank" rel="noopener noreferrer" className="btn-default">
+                <StoreBuyLink href={AMAZON_URL} inStock={offer.inStock}>
                   Buy Now
-                </a>
+                </StoreBuyLink>
               </div>
             </div>
 
@@ -221,15 +224,13 @@ export default function Header() {
               </li>
             ))}
           </ul>
-          <a
+          <StoreBuyLink
             href={AMAZON_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-default"
+            inStock={offer.inStock}
             onClick={() => setOpen(false)}
           >
             Buy Now
-          </a>
+          </StoreBuyLink>
         </div>
       </div>
     </header>
