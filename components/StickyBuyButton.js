@@ -65,7 +65,19 @@ export default function StickyBuyButton() {
         >
           <span className="dp-sticky-buy-meta">
             <span className="dp-sticky-buy-name">PrimeHeal Pillow</span>
-            <span className="dp-sticky-buy-price">{offer.priceLabel || "$39.99"}</span>
+            <span className="dp-sticky-buy-price">
+              {offer.priceLabel}
+              {offer.typicalLabel ? (
+                <span style={{ textDecoration: 'line-through', marginLeft: '8px', fontSize: '0.85em', opacity: 0.7, fontWeight: 'normal' }}>
+                  {offer.typicalLabel}
+                </span>
+              ) : null}
+              {offer.percent ? (
+                <span style={{ marginLeft: '8px', fontSize: '0.85em', color: '#e10600', fontWeight: 'bold' }}>
+                  -{offer.percent}%
+                </span>
+              ) : null}
+            </span>
           </span>
           <span className="dp-sticky-buy-label">Buy Now</span>
         </a>
@@ -73,7 +85,19 @@ export default function StickyBuyButton() {
         <span className="dp-sticky-buy-link is-disabled" aria-disabled="true">
           <span className="dp-sticky-buy-meta">
             <span className="dp-sticky-buy-name">PrimeHeal Pillow</span>
-            <span className="dp-sticky-buy-price">{offer.priceLabel || "$39.99"}</span>
+            <span className="dp-sticky-buy-price">
+              {offer.priceLabel}
+              {offer.typicalLabel ? (
+                <span style={{ textDecoration: 'line-through', marginLeft: '8px', fontSize: '0.85em', opacity: 0.7, fontWeight: 'normal' }}>
+                  {offer.typicalLabel}
+                </span>
+              ) : null}
+              {offer.percent ? (
+                <span style={{ marginLeft: '8px', fontSize: '0.85em', color: '#e10600', fontWeight: 'bold' }}>
+                  -{offer.percent}%
+                </span>
+              ) : null}
+            </span>
           </span>
           <span className="dp-sticky-buy-label">Out of Stock</span>
         </span>
