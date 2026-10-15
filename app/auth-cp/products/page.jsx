@@ -18,7 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select } from "@/components/ui/select";
-import { Plus, Edit, Trash2, Package, Loader2, ExternalLink, ImagePlus, X } from "lucide-react";
+import { Plus, Edit, Trash2, Package, Loader2, ExternalLink, ImagePlus, X, RefreshCw } from "lucide-react";
+import { featureService } from "@/services/feature.service";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -315,6 +316,18 @@ export default function AdminProductsPage() {
     },
   });
 
+  const syncAmazonMutation = useMutation({
+    mutationFn: () => featureService.syncAmazonCatalog(),
+    onSuccess: (res) => {
+      toast.success(res?.message || "Products synced from Amazon successfully");
+      queryClient.invalidateQueries(["admin-products"]);
+      queryClient.invalidateQueries(["products"]);
+    },
+    onError: (err) => {
+      toast.error(err?.response?.data?.message || err?.message || "Failed to sync from Amazon");
+    },
+  });
+
   const onSubmit = (formData) => {
     const payload = buildProductFormData(formData, {
       imageFiles,
@@ -496,13 +509,24 @@ export default function AdminProductsPage() {
           placeholderText="Search title, SKU, ASIN..."
           emptyStateText="No products found"
           actions={
-            <button
-              onClick={() => handleOpenModal()}
-              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all shadow-xs text-xs font-semibold cursor-pointer whitespace-nowrap active:scale-[0.98]"
-            >
-              <Plus className="w-4 h-4" />
-              Add Product
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                disabled={syncAmazonMutation.isPending}
+                onClick={() => syncAmazonMutation.mutate()}
+                className="flex items-center gap-2 px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 rounded-xl transition-all shadow-xs text-xs font-semibold cursor-pointer whitespace-nowrap active:scale-[0.98] disabled:opacity-50"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${syncAmazonMutation.isPending ? "animate-spin" : ""}`} />
+                {syncAmazonMutation.isPending ? "Syncing..." : "Sync from Amazon"}
+              </button>
+              <button
+                onClick={() => handleOpenModal()}
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all shadow-xs text-xs font-semibold cursor-pointer whitespace-nowrap active:scale-[0.98]"
+              >
+                <Plus className="w-4 h-4" />
+                Add Product
+              </button>
+            </div>
           }
         />
       </div>

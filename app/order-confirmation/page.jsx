@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUserStore } from "@/lib/store/useUserStore";
-import { getOrderById, downloadOrderInvoice } from "@/services/order.service";
+import { getOrderById, downloadOrderInvoice, syncOrderTracking } from "@/services/order.service";
 import { downloadBlob, orderHasInvoice } from "@/lib/utils";
-import { CheckCircle2, FileDown, Loader2, XCircle } from "lucide-react";
+import { CheckCircle2, FileDown, Loader2, XCircle, Package, ExternalLink, RefreshCw } from "lucide-react";
 import { Suspense } from "react";
 import toast from "react-hot-toast";
 
@@ -52,6 +52,22 @@ function OrderConfirmationContent() {
   const [polling, setPolling] = useState(true);
   const [downloading, setDownloading] = useState(false);
   const [shipping, setShipping] = useState(null);
+  const [isRefreshingTracking, setIsRefreshingTracking] = useState(false);
+
+  const handleRefreshTracking = async () => {
+    if (!order?.id) return;
+    setIsRefreshingTracking(true);
+    try {
+      const res = await syncOrderTracking(order.id);
+      const updated = res?.order || res?.data?.order || res;
+      setOrder(updated);
+      toast.success("Amazon tracking refreshed");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || err?.message || "Could not refresh tracking");
+    } finally {
+      setIsRefreshingTracking(false);
+    }
+  };
 
   useEffect(() => {
     if (!orderId || typeof window === "undefined") return;
@@ -205,6 +221,90 @@ function OrderConfirmationContent() {
             <p className="text-[#4a4a6a]">
               {order.shipping?.phone || shipping?.shipping_phone || shipping?.phone}
             </p>
+          )}
+        </div>
+      )}
+
+      {/* Amazon FBA Fulfillment & Tracking Card */}
+      {(order?.fulfillment?.status || order?.fulfillment?.amazon_order_id) && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Package className="w-4 h-4 text-amber-600" />
+              <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                Amazon FBA Delivery
+              </span>
+            </div>
+            <span
+              className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border uppercase tracking-wider ${
+                order.fulfillment.status === "FAILED"
+                  ? "bg-rose-100 text-rose-800 border-rose-200"
+                  : "bg-amber-100 text-amber-900 border-amber-200"
+              }`}
+            >
+              {order.fulfillment.status || "Processing"}
+            </span>
+          </div>
+
+          {order.fulfillment.amazon_order_id && (
+            <div className="flex items-center justify-between text-xs text-slate-700">
+              <span className="text-slate-500">Amazon Order ID:</span>
+              <span className="font-mono font-semibold">{order.fulfillment.amazon_order_id}</span>
+            </div>
+          )}
+
+          {order.fulfillment.status === "FAILED" ? (
+            <div className="text-xs text-rose-700 bg-rose-50 border border-rose-100 rounded-xl p-3 space-y-1">
+              <p className="font-semibold">Amazon Fulfillment Status: Failed</p>
+              <p className="text-[11px] leading-relaxed text-rose-600">
+                {order.fulfillment.error ||
+                  "Amazon was unable to dispatch with the provided shipping address. Address review required."}
+              </p>
+            </div>
+          ) : order.fulfillment.tracking_number ? (
+            <div className="space-y-2 pt-1 text-xs">
+              <div className="flex items-center justify-between text-slate-700">
+                <span className="text-slate-500">Carrier:</span>
+                <span className="font-semibold">{order.fulfillment.carrier || "Amazon Logistics"}</span>
+              </div>
+              <div className="flex items-center justify-between text-slate-700">
+                <span className="text-slate-500">Tracking Number:</span>
+                <span className="font-mono font-semibold">{order.fulfillment.tracking_number}</span>
+              </div>
+              {order.fulfillment.estimated_delivery_at && (
+                <div className="flex items-center justify-between text-slate-700">
+                  <span className="text-slate-500">Estimated Delivery:</span>
+                  <span className="font-semibold">
+                    {new Date(order.fulfillment.estimated_delivery_at).toLocaleDateString()}
+                  </span>
+                </div>
+              )}
+              {order.fulfillment.tracking_url && (
+                <a
+                  href={order.fulfillment.tracking_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 flex items-center justify-center gap-1.5 w-full py-2 px-3 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-900 font-bold rounded-xl text-xs transition-colors shadow-xs"
+                >
+                  Track Shipment on {order.fulfillment.carrier || "Carrier Site"} <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              )}
+            </div>
+          ) : (
+            <div className="text-xs text-slate-600 space-y-2 pt-1">
+              <p className="leading-relaxed">
+                Order sent to Amazon FBA warehouse. Tracking details will appear as soon as Amazon dispatches your package.
+              </p>
+              <button
+                type="button"
+                disabled={isRefreshingTracking}
+                onClick={handleRefreshTracking}
+                className="inline-flex items-center gap-1.5 font-semibold text-indigo-600 hover:text-indigo-700 hover:underline cursor-pointer"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshingTracking ? "animate-spin" : ""}`} />
+                {isRefreshingTracking ? "Checking Amazon..." : "Check for Tracking Update"}
+              </button>
+            </div>
           )}
         </div>
       )}

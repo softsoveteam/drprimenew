@@ -1,29 +1,34 @@
 const ITEMS = [
-  "30-Night Trial",
+  "OEKO-TEX® Certified",
   "Cooling Fabric",
   "Spine Alignment Support",
   "Neck Pain Relief",
   "CertiPUR-US Foam",
 ];
 
-export default function PageTicker() {
-  const row = ITEMS.map((item) => (
-    <span key={item}>
-      <img src="/images/icon-sparkle.svg" alt="" />
-      {item}
-    </span>
-  ));
+export default function PageTicker({ className = "" }) {
+  const renderRow = (keyPrefix) =>
+    ITEMS.map((item, index) => (
+      <span key={`${keyPrefix}-${index}`}>
+        <img src="/images/icon-sparkle.svg" alt="" />
+        {item}
+      </span>
+    ));
+
+  const wrapperClass = ["our-scrolling-ticker", className]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <div className="our-scrolling-ticker">
+    <div className={wrapperClass}>
       <div className="scrolling-ticker-box">
         <div className="scrolling-content">
-          {row}
-          {row}
+          {renderRow("track1-a")}
+          {renderRow("track1-b")}
         </div>
-        <div className="scrolling-content">
-          {row}
-          {row}
+        <div className="scrolling-content" aria-hidden="true">
+          {renderRow("track2-a")}
+          {renderRow("track2-b")}
         </div>
       </div>
     </div>

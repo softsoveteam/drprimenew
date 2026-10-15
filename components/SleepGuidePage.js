@@ -369,8 +369,8 @@ export default function SleepGuidePage() {
             <div className="sg-newsletterGlow"></div>
             <h2 className="sg-newsletterTitle">Sleep Better, Starting Tonight.</h2>
             <p className="sg-newsletterDesc">
-              Join 50,000+ sleepers getting our best tips, exclusive offers, and
-              early access to new products. No spam, just good sleep.
+              Join our community for sleep tips, exclusive offers, and early
+              access to new products. No spam, just good sleep.
             </p>
             <form className="sg-subscribeForm" action="#" method="POST">
               <input

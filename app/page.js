@@ -10,6 +10,7 @@ import WhyDifferent from "@/components/home/WhyDifferent";
 import JsonLd from "@/components/JsonLd";
 import { homeSchema, pageMetadata } from "@/lib/seo";
 import { GALLERY_IMAGES } from "@/lib/content";
+import PageTicker from "@/components/PageTicker";
 
 export const metadata = pageMetadata("home");
 
@@ -56,36 +57,7 @@ export default function HomePage() {
       </div>
       {/* Hero Section End */}
 
-      <div className="our-scrolling-ticker hero-scrolling-ticker">
-        <div className="scrolling-ticker-box">
-          <div className="scrolling-content">
-            <span><img src="/images/icon-sparkle.svg" alt="" />30-Night Trial</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />Cooling Fabric</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />Spine Alignment Support</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />Neck Pain Relief</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />CertiPUR-US Foam</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />30-Night Trial</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />Cooling Fabric</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />Spine Alignment Support</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />Neck Pain Relief</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />CertiPUR-US Foam</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />30-Night Trial</span>
-          </div>
-          <div className="scrolling-content">
-            <span><img src="/images/icon-sparkle.svg" alt="" />30-Night Trial</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />Cooling Fabric</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />Spine Alignment Support</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />Neck Pain Relief</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />CertiPUR-US Foam</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />30-Night Trial</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />Cooling Fabric</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />Spine Alignment Support</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />Neck Pain Relief</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />CertiPUR-US Foam</span>
-            <span><img src="/images/icon-sparkle.svg" alt="" />30-Night Trial</span>
-          </div>
-        </div>
-      </div>
+      <PageTicker className="hero-scrolling-ticker" />
 
       <WhatYouGet />
 
@@ -111,7 +83,15 @@ export default function HomePage() {
                 </div>
                 <div className="about-image-2">
                   <figure className="image-anime">
-                    <img src="/assets/DSC07277-1.jpg" alt="Neck support pillow" />
+                    <video
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      poster="/assets/video/about-video-poster.jpg"
+                    >
+                      <source src="/assets/video/about-us-video.mp4" type="video/mp4" />
+                    </video>
                   </figure>
                 </div>
               </div>

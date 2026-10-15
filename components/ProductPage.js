@@ -85,7 +85,7 @@ const GALLERY = [
   },
   {
     heading: "The Result",
-    desc: "Someday is tonight. Wake up without the ache you stopped noticing was optional.",
+    desc: "Someday is tonight. Wake up more comfortable, night after night.",
   },
 ];
 

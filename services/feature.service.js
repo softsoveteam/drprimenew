@@ -15,4 +15,9 @@ export const featureService = {
   updateShopFeature: async (shop_enabled) => {
     return await api.post("/admin/features/shop", { shop_enabled });
   },
+
+  /** POST /admin/features/amazon-sync */
+  syncAmazonCatalog: async () => {
+    return await api.post("/admin/features/amazon-sync");
+  },
 };

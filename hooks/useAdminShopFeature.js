@@ -37,9 +37,9 @@ export function useAdminShopFeature(enabled = true) {
     mutationFn: (shop_enabled) => featureService.updateShopFeature(shop_enabled),
     onSuccess: (body) => {
       const shopEnabled = body?.data?.shop_enabled === true;
-      const next = { shop_enabled: shopEnabled };
+      const next = { ...query.data, shop_enabled: shopEnabled };
       queryClient.setQueryData(ADMIN_FEATURES_QUERY_KEY, next);
-      queryClient.setQueryData(FEATURES_QUERY_KEY, next);
+      queryClient.setQueryData(FEATURES_QUERY_KEY, { shop_enabled: shopEnabled });
       toast.success(body?.message || (shopEnabled ? "Shop turned on." : "Shop turned off."));
     },
     onError: (error) => {
@@ -47,13 +47,32 @@ export function useAdminShopFeature(enabled = true) {
     },
   });
 
+  const syncMutation = useMutation({
+    mutationFn: () => featureService.syncAmazonCatalog(),
+    onSuccess: (body) => {
+      queryClient.invalidateQueries({ queryKey: ADMIN_FEATURES_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      const count = body?.data?.count ?? 0;
+      toast.success(body?.message || `Successfully synced ${count} product(s) from Amazon.`);
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || error?.message || "Failed to sync from Amazon");
+    },
+  });
+
   return {
     shopEnabled: readEnabled(query.data),
+    lastSyncedAt: query.data?.last_synced_at,
+    totalProducts: query.data?.total_products ?? 0,
+    totalStock: query.data?.total_stock ?? 0,
     isLoading: enabled && query.isLoading,
     isFetched: !enabled || query.isFetched,
     isError: query.isError,
     refetch: query.refetch,
     isUpdating: mutation.isPending,
     setShopEnabled: (value) => mutation.mutate(Boolean(value)),
+    isSyncingAmazon: syncMutation.isPending,
+    syncAmazon: () => syncMutation.mutate(),
   };
 }

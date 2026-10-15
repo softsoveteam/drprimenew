@@ -18,3 +18,8 @@ export const downloadOrderInvoice = async (id) => {
   });
   return blob;
 };
+
+export const syncOrderTracking = async (id) => {
+  const response = await axios.post(`/orders/${id}/sync-tracking`);
+  return response.data;
+};

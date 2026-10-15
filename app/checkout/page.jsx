@@ -168,16 +168,30 @@ function ShippingForm({ onSubmit, submitting }) {
         {field("shipping_state", "State", { autoComplete: "address-level1" })}
       </div>
       <div className="grid grid-cols-2 gap-3">
-        {field("shipping_postal_code", "Postal code", {
+        {field("shipping_postal_code", "Postal code (ZIP)", {
           autoComplete: "postal-code",
           maxLength: 20,
         })}
-        {field("shipping_country", "Country", {
-          autoComplete: "country",
-          maxLength: 2,
-          className: "uppercase",
-        })}
+        <div className="space-y-1.5">
+          <Label htmlFor="shipping_country" className="text-xs">
+            Country
+          </Label>
+          <select
+            id="shipping_country"
+            {...register("shipping_country")}
+            className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#1d1c50]"
+          >
+            <option value="US">United States (Amazon US FBA)</option>
+          </select>
+          {errors.shipping_country && (
+            <p className="text-[11px] text-rose-500 font-medium">{errors.shipping_country.message}</p>
+          )}
+        </div>
       </div>
+      <p className="text-[11px] text-slate-600 bg-amber-50/70 border border-amber-200/80 p-2.5 rounded-xl flex items-center gap-2">
+        <span>📦</span>
+        <span><strong>Amazon FBA Domestic Delivery:</strong> Dispatched directly from Amazon US fulfillment centers to all 50 US States with live tracking.</span>
+      </p>
       {field("shipping_phone", "Phone (optional)", {
         autoComplete: "tel",
         maxLength: 30,

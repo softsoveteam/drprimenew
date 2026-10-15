@@ -11,7 +11,7 @@ const ITEMS = [
     image: "/assets/DSC07140-2.jpg",
     alt: "Sleep better feel better",
     title: "30-Night Free Trial",
-    body: "Love your sleep guarantee. Try PrimeHeal at home and feel the difference in how you wake up.",
+    body: "Try PrimeHeal at home and feel the difference in how you wake up.",
   },
   {
     icon: "/assets/cooling.svg",
@@ -24,7 +24,7 @@ const ITEMS = [
     icon: "/assets/scoliosis.svg",
     image: "/assets/slider-pillow.png",
     alt: "PrimeHeal pillow upgrade",
-    title: "Posture Correction",
+    title: "Posture Support",
     body: "Ergonomic shape supports healthy posture and keeps your neck aligned whether you sleep on your side, back, or stomach.",
   },
 ];

@@ -6,7 +6,7 @@ const FEATURES = [
   {
     icon: "fa-solid fa-moon",
     title: "30-Night Free Trial",
-    body: "Love your sleep guarantee.",
+    body: "Try PrimeHeal at home and feel the difference.",
   },
   {
     icon: "fa-solid fa-snowflake",
@@ -15,7 +15,7 @@ const FEATURES = [
   },
   {
     icon: "fa-solid fa-user",
-    title: "Posture Correction",
+    title: "Posture Support",
     body: "Ergonomic shape supports healthy posture.",
   },
 ];

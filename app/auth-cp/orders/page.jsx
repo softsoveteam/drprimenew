@@ -7,6 +7,7 @@ import {
   getAdminOrderById,
   deleteAdminOrder,
   downloadAdminOrderInvoice,
+  syncAdminOrderTracking,
 } from "@/services/admin-order.service";
 import { extractPaginated } from "@/lib/axios";
 import { downloadBlob, orderHasInvoice } from "@/lib/utils";
@@ -14,7 +15,7 @@ import { DataTable } from "@/components/admin/DataTable";
 import { Modal } from "@/components/ui/modal";
 import { DeleteConfirmModal } from "@/components/ui/delete-confirm-modal";
 import { Select } from "@/components/ui/select";
-import { Eye, Trash2, Loader2, ShoppingBag, FileDown } from "lucide-react";
+import { Eye, Trash2, Loader2, ShoppingBag, FileDown, Truck, ExternalLink, RefreshCw, MapPin } from "lucide-react";
 import toast from "react-hot-toast";
 
 function formatPrice(price, currency = "USD") {
@@ -34,6 +35,16 @@ const STATUS_STYLES = {
   canceled: "bg-slate-100 text-slate-600 border-slate-200",
 };
 
+const FULFILLMENT_STATUS_STYLES = {
+  RECEIVED: "bg-blue-50 text-blue-700 border-blue-200",
+  PLANNING: "bg-amber-50 text-amber-700 border-amber-200",
+  PROCESSING: "bg-indigo-50 text-indigo-700 border-indigo-200",
+  SHIPPED: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  COMPLETE: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  CANCELLED: "bg-slate-100 text-slate-600 border-slate-200",
+  FAILED: "bg-rose-50 text-rose-700 border-rose-200",
+};
+
 export default function AdminOrdersPage() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(15);
@@ -42,6 +53,7 @@ export default function AdminOrdersPage() {
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [deletingOrder, setDeletingOrder] = useState(null);
   const [downloadingInvoiceId, setDownloadingInvoiceId] = useState(null);
+  const [isSyncingTracking, setIsSyncingTracking] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -59,6 +71,20 @@ export default function AdminOrdersPage() {
       toast.error(err?.message || "Could not download invoice");
     } finally {
       setDownloadingInvoiceId(null);
+    }
+  };
+
+  const handleSyncTracking = async (orderId) => {
+    setIsSyncingTracking(true);
+    try {
+      const res = await syncAdminOrderTracking(orderId);
+      toast.success(res?.message || "Amazon tracking refreshed");
+      queryClient.invalidateQueries(["admin-order-detail", orderId]);
+      queryClient.invalidateQueries(["admin-orders"]);
+    } catch (err) {
+      toast.error(err?.response?.data?.message || err?.message || "Failed to refresh Amazon tracking");
+    } finally {
+      setIsSyncingTracking(false);
     }
   };
 
@@ -139,13 +165,24 @@ export default function AdminOrdersPage() {
       header: "Status",
       id: "status",
       render: (row) => (
-        <span
-          className={`px-2.5 py-0.5 text-[11px] font-semibold rounded-full border capitalize ${
-            STATUS_STYLES[row.status] || STATUS_STYLES.pending
-          }`}
-        >
-          {row.status}
-        </span>
+        <div className="flex flex-col gap-1 items-start">
+          <span
+            className={`px-2 py-0.5 text-[10px] font-semibold rounded-full border capitalize ${
+              STATUS_STYLES[row.status] || STATUS_STYLES.pending
+            }`}
+          >
+            {row.status}
+          </span>
+          {row.fulfillment?.status && (
+            <span
+              className={`px-1.5 py-0.5 text-[9px] font-bold rounded border uppercase tracking-wider ${
+                FULFILLMENT_STATUS_STYLES[row.fulfillment.status] || "bg-slate-100 text-slate-600 border-slate-200"
+              }`}
+            >
+              FBA: {row.fulfillment.status}
+            </span>
+          )}
+        </div>
       ),
     },
     {
@@ -314,6 +351,128 @@ export default function AdminOrdersPage() {
                 <p className="text-rose-600">{orderDetail.payment_error}</p>
               )}
             </div>
+
+            {/* Amazon FBA Multi-Channel Fulfillment */}
+            <div className="rounded-xl border border-amber-200/80 bg-gradient-to-br from-amber-50/60 to-orange-50/40 p-3.5 text-xs space-y-2.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 font-semibold text-slate-800">
+                  <Truck className="w-4 h-4 text-amber-600" />
+                  <span>Amazon FBA Fulfillment</span>
+                </div>
+                {orderDetail.fulfillment?.amazon_order_id && (
+                  <button
+                    type="button"
+                    onClick={() => handleSyncTracking(orderDetail.id)}
+                    disabled={isSyncingTracking}
+                    className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-amber-800 bg-white border border-amber-200 rounded-lg hover:bg-amber-50 transition-colors disabled:opacity-60 cursor-pointer shadow-xs"
+                    title="Fetch live tracking and package shipment status from Amazon SP-API"
+                  >
+                    <RefreshCw className={`w-3 h-3 ${isSyncingTracking ? "animate-spin" : ""}`} />
+                    <span>Sync Tracking</span>
+                  </button>
+                )}
+              </div>
+
+              {orderDetail.fulfillment?.amazon_order_id ? (
+                <div className="space-y-1.5 pt-1.5 border-t border-amber-200/60">
+                  <div className="flex justify-between items-center text-[11px]">
+                    <span className="text-slate-500">Amazon Order ID:</span>
+                    <span className="font-mono font-medium text-slate-800">
+                      {orderDetail.fulfillment.amazon_order_id}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center text-[11px]">
+                    <span className="text-slate-500">Fulfillment Status:</span>
+                    <span
+                      className={`px-2 py-0.5 rounded-full border text-[10px] font-semibold uppercase ${
+                        FULFILLMENT_STATUS_STYLES[orderDetail.fulfillment.status] ||
+                        "bg-slate-100 text-slate-700 border-slate-200"
+                      }`}
+                    >
+                      {orderDetail.fulfillment.status || "RECEIVED"}
+                    </span>
+                  </div>
+                  {orderDetail.fulfillment.carrier && (
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-slate-500">Carrier:</span>
+                      <span className="font-semibold text-slate-800">
+                        {orderDetail.fulfillment.carrier}
+                      </span>
+                    </div>
+                  )}
+                  {orderDetail.fulfillment.tracking_number && (
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-slate-500">Tracking Number:</span>
+                      {orderDetail.fulfillment.tracking_url ? (
+                        <a
+                          href={orderDetail.fulfillment.tracking_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 font-mono font-bold text-indigo-600 hover:text-indigo-800 hover:underline"
+                        >
+                          {orderDetail.fulfillment.tracking_number}
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      ) : (
+                        <span className="font-mono font-semibold text-slate-800">
+                          {orderDetail.fulfillment.tracking_number}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  {orderDetail.fulfillment.estimated_delivery_at && (
+                    <div className="flex justify-between items-center text-[11px]">
+                      <span className="text-slate-500">Estimated Delivery:</span>
+                      <span className="font-medium text-slate-700">
+                        {new Date(orderDetail.fulfillment.estimated_delivery_at).toLocaleString(
+                          undefined,
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p className="text-[11px] text-slate-500 italic pt-1">
+                  {orderDetail.status === "paid"
+                    ? "Amazon fulfillment order submitted. Status will update once processed by Amazon FBA."
+                    : "No Amazon fulfillment order created yet (order not paid)."}
+                </p>
+              )}
+            </div>
+
+            {/* Shipping Destination */}
+            {orderDetail.shipping?.name && (
+              <div className="rounded-xl bg-slate-50 border border-slate-100 p-3 text-xs space-y-1">
+                <p className="font-semibold text-slate-700 flex items-center gap-1.5 mb-1">
+                  <MapPin className="w-3.5 h-3.5 text-slate-500" /> Shipping Destination
+                </p>
+                <p className="text-slate-800 font-medium">{orderDetail.shipping.name}</p>
+                <p className="text-slate-600">{orderDetail.shipping.address_line1}</p>
+                {orderDetail.shipping.address_line2 && (
+                  <p className="text-slate-600">{orderDetail.shipping.address_line2}</p>
+                )}
+                <p className="text-slate-600">
+                  {[
+                    orderDetail.shipping.city,
+                    orderDetail.shipping.state,
+                    orderDetail.shipping.postal_code,
+                    orderDetail.shipping.country,
+                  ]
+                    .filter(Boolean)
+                    .join(", ")}
+                </p>
+                {orderDetail.shipping.phone && (
+                  <p className="text-slate-500 text-[11px]">Phone: {orderDetail.shipping.phone}</p>
+                )}
+              </div>
+            )}
 
             {orderHasInvoice(orderDetail) && (
               <button

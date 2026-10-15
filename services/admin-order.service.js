@@ -23,3 +23,9 @@ export const downloadAdminOrderInvoice = async (id) => {
   });
   return blob;
 };
+
+/** Request live tracking update from Amazon SP-API (admin). */
+export const syncAdminOrderTracking = async (id) => {
+  const response = await axios.post(`/admin/orders/${id}/sync-tracking`);
+  return response.data;
+};
