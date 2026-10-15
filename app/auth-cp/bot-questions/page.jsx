@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Edit, Trash2, MessageCircle, Loader2, CornerDownRight } from "lucide-react";
+import { Plus, Edit, Trash2, MessageCircle, Loader2, CornerDownRight, Bot } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -254,12 +254,35 @@ export default function BotQuestionsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Chat Bot Questions</h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Top-level questions open the chat. Use the plus icon to add a follow-up under any question.
-          </p>
+      {/* Header Card */}
+      <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 p-6 shadow-xs">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-slate-100/60 to-transparent pointer-events-none" />
+        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-white shadow-sm shrink-0">
+              <Bot className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                  Chat Bot Knowledge Base
+                </h1>
+                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200/60">
+                  {totalItems || 0} Questions
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+                Manage automated customer Q&A flows and conversational tree branches.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => handleOpenModal(null, null)}
+            className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-all shadow-sm shadow-indigo-600/20 text-xs font-semibold cursor-pointer whitespace-nowrap active:scale-[0.98] self-start md:self-center"
+          >
+            <Plus className="w-4 h-4" />
+            Add Root Question
+          </button>
         </div>
       </div>
 

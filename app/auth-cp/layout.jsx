@@ -26,12 +26,12 @@ export default function AuthCpLayout({ children }) {
   }, [isAuthPage, pathname, isFetched, shopEnabled, router]);
 
   if (isAuthPage) {
-    return <div className="min-h-screen bg-slate-50 text-slate-900">{children}</div>;
+    return <div className="admin-theme min-h-screen bg-slate-50 text-slate-900">{children}</div>;
   }
 
   return (
     <AdminGuard>
-      <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex">
+      <div className="admin-theme min-h-screen bg-[#f8fafc] bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(99,102,241,0.07),rgba(255,255,255,0))] text-slate-900 flex antialiased selection:bg-indigo-600 selection:text-white">
         {/* Admin Navigation Sidebar */}
         <AdminSidebar />
 
@@ -39,7 +39,7 @@ export default function AuthCpLayout({ children }) {
         <div
           className={cn(
             "flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out",
-            isSidebarOpen ? "lg:ml-60" : "lg:ml-[68px]"
+            isSidebarOpen ? "lg:ml-64" : "lg:ml-[72px]"
           )}
         >
           {/* Top Admin Header */}
@@ -51,8 +51,16 @@ export default function AuthCpLayout({ children }) {
           </main>
 
           {/* Admin Footer */}
-          <footer className="border-t border-slate-200/80 py-4 px-6 text-center text-xs text-slate-400 bg-white/60">
-            &copy; {new Date().getFullYear()} Dr.Prime Control Panel &bull; Enterprise Management System
+          <footer className="border-t border-slate-200/80 py-4 px-6 text-center text-xs text-slate-400 bg-white/70 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="font-medium text-slate-600">Dr.Prime Management Cloud</span>
+              <span className="text-slate-300">&bull;</span>
+              <span className="text-[11px] text-slate-400">Enterprise v2.5</span>
+            </div>
+            <div className="text-[11px] text-slate-400">
+              &copy; {new Date().getFullYear()} Dr.Prime Pillow &bull; All Rights Reserved
+            </div>
           </footer>
         </div>
       </div>

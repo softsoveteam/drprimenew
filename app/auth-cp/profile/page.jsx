@@ -47,7 +47,7 @@ export default function AdminProfilePage() {
       {/* Top Banner / Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-white rounded-2xl border border-slate-200/80 shadow-xs">
         <div className="flex items-center gap-4">
-          <div className="h-16 w-16 rounded-2xl bg-gradient-to-tr from-[#1d1c50] to-[#3b38a0] text-white flex items-center justify-center font-extrabold text-2xl shadow-md ring-4 ring-indigo-50">
+          <div className="h-16 w-16 rounded-2xl bg-slate-900 border border-slate-800 text-white flex items-center justify-center font-extrabold text-2xl shadow-sm">
             {user?.name?.charAt(0) || "A"}
           </div>
           <div>

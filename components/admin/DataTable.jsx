@@ -126,30 +126,43 @@ export function DataTable({
       )}
     >
       {/* Top Action & Search Bar */}
-      <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3.5 p-4 sm:p-5 border-b border-slate-100 bg-slate-50/50">
+      <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3.5 p-4 sm:p-5 border-b border-slate-100 bg-slate-50/60">
         <div className="flex-1 max-w-md">
-          <div className="flex items-center gap-2.5 border border-slate-200 rounded-xl px-3.5 h-10 bg-white focus-within:border-[#1d1c50] focus-within:ring-2 focus-within:ring-[#1d1c50]/10 transition-all shadow-xs">
+          <div className="flex items-center gap-2.5 border border-slate-200 rounded-xl px-3.5 h-10 bg-white focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/10 transition-all shadow-xs">
             <Search className="h-4 w-4 shrink-0 text-slate-400" />
             <input
-              className="flex-1 bg-transparent text-sm text-slate-900 placeholder:text-slate-400 outline-none border-none min-w-0"
+              className="flex-1 bg-transparent text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none border-none min-w-0"
               placeholder={placeholderText}
               value={localSearch}
               onChange={handleSearchChange}
             />
+            {localSearch && (
+              <button
+                type="button"
+                onClick={() => {
+                  setLocalSearch("");
+                  onSearchChange?.("");
+                  onPageChange?.(1);
+                }}
+                className="text-slate-400 hover:text-slate-600 text-xs p-1 rounded-md"
+              >
+                ✕
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5 justify-end">
+        <div className="flex flex-wrap items-center gap-2.5 justify-end">
           {actions}
 
           {onRefetch && (
             <button
               onClick={handleManualRefetch}
               disabled={isLoading || countdown > 0}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold py-2 px-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-xs cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold py-2 px-3.5 rounded-xl border border-slate-200/90 bg-white hover:bg-slate-50 text-slate-700 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-xs cursor-pointer"
               title={countdown > 0 ? `Refetch cooldown (${countdown}s)` : "Refresh data"}
             >
-              <RefreshCw className={cn("w-3.5 h-3.5", isLoading && "animate-spin text-[#1d1c50]")} />
+              <RefreshCw className={cn("w-3.5 h-3.5", isLoading && "animate-spin text-indigo-600")} />
               <span>{countdown > 0 ? `Refresh (${countdown}s)` : "Refresh"}</span>
             </button>
           )}
@@ -165,7 +178,7 @@ export function DataTable({
                 <TableHead
                   key={col.id || idx.toString()}
                   className={cn(
-                    "text-[11px] font-bold text-slate-600 uppercase tracking-wider py-3.5 px-4",
+                    "text-[11px] font-bold text-slate-500 uppercase tracking-wider py-3.5 px-4",
                     col.className
                   )}
                 >
@@ -182,8 +195,11 @@ export function DataTable({
                   className="text-center py-20 text-slate-500"
                 >
                   <div className="flex flex-col items-center justify-center gap-3">
-                    <RefreshCw className="w-7 h-7 animate-spin text-[#1d1c50]" />
-                    <span className="text-xs font-medium text-slate-600">Loading records...</span>
+                    <div className="w-10 h-10 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 shadow-inner">
+                      <RefreshCw className="w-5 h-5 animate-spin" />
+                    </div>
+                    <span className="text-xs font-semibold text-slate-700">Loading records...</span>
+                    <span className="text-[11px] text-slate-400">Fetching latest database snapshot</span>
                   </div>
                 </TableCell>
               </TableRow>
@@ -195,11 +211,11 @@ export function DataTable({
                 >
                   <div className="flex flex-col items-center justify-center gap-3 max-w-sm mx-auto">
                     {emptyStateIcon || (
-                      <div className="h-12 w-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
-                        <Inbox className="w-6 h-6" />
+                      <div className="h-14 w-14 rounded-2xl bg-indigo-50/60 border border-indigo-100 flex items-center justify-center text-indigo-500 shadow-sm">
+                        <Inbox className="w-7 h-7" />
                       </div>
                     )}
-                    <span className="text-sm font-semibold text-slate-700">{emptyStateText}</span>
+                    <span className="text-sm font-bold text-slate-800">{emptyStateText}</span>
                     <p className="text-xs text-slate-400">
                       Try adjusting your search query or filters to find what you're looking for.
                     </p>
@@ -211,8 +227,8 @@ export function DataTable({
                 <TableRow
                   key={row.id || rowIdx}
                   className={cn(
-                    "hover:bg-slate-50/80 border-b border-slate-100 transition-colors",
-                    onRowClick && "cursor-pointer"
+                    "hover:bg-slate-50/80 border-b border-slate-100 transition-colors group",
+                    onRowClick && "cursor-pointer hover:bg-indigo-50/20"
                   )}
                   onClick={() => onRowClick?.(row)}
                 >
@@ -248,23 +264,24 @@ export function DataTable({
             </div>
 
             {onLimitChange && (
-              <div className="flex items-center gap-1.5 min-w-[110px]">
+              <div className="flex items-center gap-1.5 min-w-[120px]">
                 <span className="text-slate-500 whitespace-nowrap">Per page:</span>
-                <Select
-                  value={limit}
-                  onChange={(e) => {
-                    const val = Number(e.target.value);
-                    onLimitChange(val);
-                    onPageChange?.(1);
-                  }}
-                  className="px-2 py-1 text-xs rounded-lg border border-slate-200 bg-white text-slate-800 shadow-2xs font-medium cursor-pointer"
-                >
-                  <option value={5}>5</option>
-                  <option value={10}>10</option>
-                  <option value={20}>20</option>
-                  <option value={50}>50</option>
-                  <option value={100}>100</option>
-                </Select>
+                <div className="w-20">
+                  <Select
+                    value={String(limit)}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      onLimitChange(val);
+                      onPageChange?.(1);
+                    }}
+                  >
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </Select>
+                </div>
               </div>
             )}
           </div>
@@ -282,7 +299,7 @@ export function DataTable({
                     const val = Math.min(totalPages, Math.max(1, parseInt(e.target.value) || 1));
                     onPageChange(val);
                   }}
-                  className="w-12 px-1.5 py-1 text-center rounded-lg border border-slate-200 bg-white text-slate-800 outline-none focus:border-[#1d1c50] shadow-2xs font-medium"
+                  className="w-12 px-1.5 py-1 text-center rounded-lg border border-slate-200 bg-white text-slate-800 outline-none focus:border-indigo-500 shadow-2xs font-semibold"
                 />
               </div>
             )}
