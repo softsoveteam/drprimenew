@@ -125,11 +125,29 @@ export default function ProductDetailsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Product Details</h1>
-        <p className="text-xs text-slate-500 mt-1 max-w-2xl">
-          Update the PrimeHeal price, description, and stock status shown on the home page and product page.
-        </p>
+      {/* Header Card */}
+      <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 p-6 shadow-xs">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-slate-100/60 to-transparent pointer-events-none" />
+        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-white shadow-sm shrink-0">
+              <Tag className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                  PrimeHeal Pricing & Offer Badges
+                </h1>
+                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200/60">
+                  Live Storefront Offer
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+                Configure promotional text badges, discounted prices, typical MSRP, and instant stock availability.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {isError && (

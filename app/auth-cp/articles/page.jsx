@@ -104,24 +104,53 @@ export default function ArticlesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Articles</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage all articles in the system.</p>
-        </div>
-        <div className="flex items-center gap-3 w-48">
-          <Select
-            value={status}
-            onChange={(e) => {
-              setStatus(e.target.value);
-              setPage(1);
-            }}
-          >
-            <option value="">All Status</option>
-            <option value="published">Published</option>
-            <option value="draft">Draft</option>
-            <option value="scheduled">Scheduled</option>
-          </Select>
+      {/* Header Card */}
+      <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 p-6 shadow-xs">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-slate-100/60 to-transparent pointer-events-none" />
+        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-white shadow-sm shrink-0">
+              <Edit className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                  Articles & Blog Posts
+                </h1>
+                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200/60">
+                  {data?.total ?? data?.data?.total ?? 0} Published
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+                Publish and manage sleep health guides, blog stories, and educational articles.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 self-start md:self-center">
+            <div className="w-full sm:w-44 shrink-0">
+              <Select
+                value={status}
+                onChange={(e) => {
+                  setStatus(e.target.value);
+                  setPage(1);
+                }}
+              >
+                <option value="">All Statuses</option>
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+                <option value="scheduled">Scheduled</option>
+              </Select>
+            </div>
+
+            <Link
+              href="/auth-cp/articles/create"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-sm shadow-indigo-600/20 transition-all cursor-pointer whitespace-nowrap active:scale-[0.98]"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Create Article</span>
+            </Link>
+          </div>
         </div>
       </div>
 

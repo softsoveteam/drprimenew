@@ -319,7 +319,7 @@ export default function AdminLoginPage() {
         background: "radial-gradient(ellipse at 60% 0%, #eef2ff 0%, #f8fafc 50%, #f1f5f9 100%)",
         minHeight: "100vh",
       }}
-      className="flex items-center justify-center p-4 relative overflow-hidden"
+      className="admin-theme flex items-center justify-center p-4 relative overflow-hidden"
     >
       {/* Decorative blobs */}
       <div

@@ -35,11 +35,35 @@ export default function ShopFeaturePage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Shop Feature & Amazon Sync</h1>
-        <p className="text-xs text-slate-500 mt-1">
-          Control your storefront status and sync real-time products & FBA inventory from Amazon.
-        </p>
+      {/* Header Card */}
+      <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 p-6 shadow-xs">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-slate-100/60 to-transparent pointer-events-none" />
+        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-white shadow-sm shrink-0">
+              <Store className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                  Store Mode & Amazon Inventory Sync
+                </h1>
+                <span
+                  className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+                    shopEnabled
+                      ? "bg-emerald-50 text-emerald-700 border-emerald-200/80"
+                      : "bg-amber-50 text-amber-700 border-amber-200/80"
+                  }`}
+                >
+                  {shopEnabled ? "🟢 Storefront Active" : "⚪ Direct Store Disabled"}
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+                Toggle native cart/checkout functionality and trigger bi-directional Amazon SP-API sync.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* 1. Shop Toggle */}

@@ -234,14 +234,29 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Orders</h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Customer orders from checkout. Delete does not refund Stripe or restore stock.
-          </p>
-        </div>
-        <div className="w-full sm:w-44">
+      {/* Header Card */}
+      <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 p-6 shadow-xs">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-slate-100/60 to-transparent pointer-events-none" />
+        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-white shadow-sm shrink-0">
+              <ShoppingBag className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                  Direct Store Orders
+                </h1>
+                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200/60">
+                  {totalItems || 0} Orders
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+                Direct storefront checkout orders, Stripe payment verification, and Amazon MCF fulfillment.
+              </p>
+            </div>
+          </div>
+        <div className="w-full sm:w-44 shrink-0">
           <Select
             value={status}
             onChange={(e) => {
@@ -249,13 +264,14 @@ export default function AdminOrdersPage() {
               setPage(1);
             }}
           >
-            <option value="">All statuses</option>
+            <option value="">All Statuses</option>
             <option value="pending">Pending</option>
             <option value="paid">Paid</option>
             <option value="failed">Failed</option>
             <option value="canceled">Canceled</option>
           </Select>
         </div>
+      </div>
       </div>
 
       {error && (
@@ -353,10 +369,10 @@ export default function AdminOrdersPage() {
             </div>
 
             {/* Amazon FBA Multi-Channel Fulfillment */}
-            <div className="rounded-xl border border-amber-200/80 bg-gradient-to-br from-amber-50/60 to-orange-50/40 p-3.5 text-xs space-y-2.5">
+            <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-3.5 text-xs space-y-2.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5 font-semibold text-slate-800">
-                  <Truck className="w-4 h-4 text-amber-600" />
+                  <Truck className="w-4 h-4 text-slate-600" />
                   <span>Amazon FBA Fulfillment</span>
                 </div>
                 {orderDetail.fulfillment?.amazon_order_id && (

@@ -243,13 +243,35 @@ export default function ContactFieldsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Contact Form Fields</h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Manage dynamic fields for your contact form.
-          </p>
+      {/* Header Card */}
+      <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 p-6 shadow-xs">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-slate-100/60 to-transparent pointer-events-none" />
+        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-white shadow-sm shrink-0">
+              <Settings2 className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                  Contact Form Fields
+                </h1>
+                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200/60">
+                  {fields.length || 0} Dynamic Fields
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+                Configure dynamic lead capture fields, validation requirements, and dropdown options.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => openModal()}
+            className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-all shadow-sm shadow-indigo-600/20 text-xs font-semibold cursor-pointer whitespace-nowrap active:scale-[0.98] self-start md:self-center"
+          >
+            <Plus className="w-4 h-4" />
+            Add Custom Field
+          </button>
         </div>
       </div>
 
