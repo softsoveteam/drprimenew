@@ -10,8 +10,8 @@ const ITEMS = [
     icon: "/assets/slumber.svg",
     image: "/assets/DSC07140-2.jpg",
     alt: "Sleep better feel better",
-    title: "30-Night Free Trial",
-    body: "Try PrimeHeal at home and feel the difference in how you wake up.",
+    title: "Wake Up Feeling Better",
+    body: "Contour support helps you rest more comfortably and feel the difference in how you wake up.",
   },
   {
     icon: "/assets/cooling.svg",

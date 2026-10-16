@@ -13,7 +13,6 @@ import {
   ExternalLink,
   ShieldCheck,
   Truck,
-  RotateCcw,
   Check,
   Star,
   Copy,
@@ -294,9 +293,9 @@ export default function ProductDetailPage() {
                 <span className="text-slate-500 text-[10px] block leading-tight">Direct US warehouse delivery</span>
               </div>
               <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 text-center shadow-2xs">
-                <RotateCcw className="w-5 h-5 text-blue-600 mx-auto mb-1.5" />
-                <span className="font-bold text-slate-900 text-xs block">30-Night Trial</span>
-                <span className="text-slate-500 text-[10px] block leading-tight">100% hassle-free returns</span>
+                <Layers className="w-5 h-5 text-blue-600 mx-auto mb-1.5" />
+                <span className="font-bold text-slate-900 text-xs block">60D Memory Foam</span>
+                <span className="text-slate-500 text-[10px] block leading-tight">Dense support that holds its shape</span>
               </div>
               <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 text-center shadow-2xs">
                 <ShieldCheck className="w-5 h-5 text-amber-600 mx-auto mb-1.5" />

@@ -122,9 +122,9 @@ export default function HomePage() {
                   </div>
                   <div className="years-experience-box">
                     <h2>
-                      <span className="counter">30</span>
+                      <span className="counter">60</span>D
                     </h2>
-                    <p>Night Free Trial</p>
+                    <p>High-Density Foam</p>
                   </div>
                 </div>
 
@@ -250,13 +250,13 @@ export default function HomePage() {
                 <div className="our-facts-list wow fadeInUp" data-wow-delay="0.4s">
                   <div className="facts-item">
                     <div className="icon-box">
-                      <i className="fa-solid fa-moon"></i>
+                      <i className="fa-solid fa-bed"></i>
                     </div>
                     <div className="facts-item-content">
                       <h3>
-                        <span className="counter">30</span>
+                        <span className="counter">3</span>
                       </h3>
-                      <p>Night free trial so you can feel the difference at home.</p>
+                      <p>Sleep positions supported — side, back, and stomach.</p>
                     </div>
                   </div>
                   <div className="facts-item">

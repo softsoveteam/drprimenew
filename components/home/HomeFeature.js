@@ -4,9 +4,9 @@ import useScrollReveal from "./useScrollReveal";
 
 const FEATURES = [
   {
-    icon: "fa-solid fa-moon",
-    title: "30-Night Free Trial",
-    body: "Try PrimeHeal at home and feel the difference.",
+    icon: "fa-solid fa-layer-group",
+    title: "60D Memory Foam",
+    body: "High-density foam holds its shape and supports you all night.",
   },
   {
     icon: "fa-solid fa-snowflake",

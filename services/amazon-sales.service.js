@@ -11,7 +11,9 @@ export const getAmazonSalesStats = async (params) => {
 };
 
 export const syncAmazonSales = async (data = {}) => {
-  const response = await axios.post("/admin/amazon-sales/sync", data);
+  const response = await axios.post("/admin/amazon-sales/sync", data, {
+    timeout: 300000,
+  });
   return response.data;
 };
 

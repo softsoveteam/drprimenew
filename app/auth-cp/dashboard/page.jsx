@@ -257,7 +257,6 @@ export default function DashboardPage() {
   } = useQuery({
     queryKey: ["dashboard", "amazon-stats"],
     queryFn: () => getAmazonSalesStats(),
-    enabled: Boolean(shopEnabled),
   });
 
   const rawAmazonStats =
