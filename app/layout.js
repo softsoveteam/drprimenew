@@ -1,3 +1,4 @@
+import Script from "next/script";
 import "./globals.css";
 import QueryProvider from "@/components/QueryProvider";
 import PublicLayoutWrapper from "@/components/PublicLayoutWrapper";
@@ -101,6 +102,18 @@ export default function RootLayout({ children }) {
         <link href="/css/magnific-popup.css" rel="stylesheet" />
         <link href="/css/custom.css?v=why-choose-us-v1" rel="stylesheet" media="screen" />
         <link href="/css/chatbot.css" rel="stylesheet" media="screen" />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-8D9X1GCQQR"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-8D9X1GCQQR');
+          `}
+        </Script>
       </head>
       <body>
         <QueryProvider>
