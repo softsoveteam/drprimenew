@@ -7,19 +7,37 @@ import StoreBuyLink from "@/components/product/StoreBuyLink";
 import { useProductDetails } from "@/hooks/useProductDetails";
 
 const BLUE_THUMBS = [
-  "/assets/sky-blue/01.jpg",
-  "/assets/sky-blue/02.jpg",
-  "/assets/sky-blue/03-1.jpeg",
-  "/assets/sky-blue/04-1.jpeg",
-  "/assets/sky-blue/05.jpeg",
+  "/assets/product/blue/0.jpg",
+  "/assets/product/blue/01.jpg",
+  "/assets/product/blue/1.jpg",
+  "/assets/product/blue/2.jpg",
+  "/assets/product/blue/3.jpg",
+  "/assets/product/blue/4.jpg",
+  "/assets/product/blue/5.jpg",
+  "/assets/product/blue/6.jpg",
+  "/assets/product/blue/7.jpg",
+  "/assets/product/blue/8.jpg",
+  "/assets/product/blue/9.jpg",
+  "/assets/product/blue/10.jpg",
+  "/assets/product/blue/12.jpg",
 ];
 
 const GRAY_THUMBS = [
-  "/assets/cool-gray/01.jpeg",
-  "/assets/cool-gray/02.jpeg",
-  "/assets/cool-gray/03.jpeg",
-  "/assets/cool-gray/04.jpeg",
-  "/assets/cool-gray/05.jpeg",
+  "/assets/product/grey/0.jpg",
+  "/assets/product/grey/1.jpg",
+  "/assets/product/grey/2.jpg",
+  "/assets/product/grey/3.jpg",
+  "/assets/product/grey/4.jpg",
+  "/assets/product/grey/5.jpg",
+  "/assets/product/grey/6.jpg",
+  "/assets/product/grey/7.jpg",
+  "/assets/product/grey/8.jpg",
+  "/assets/product/grey/09.jpg",
+  "/assets/product/grey/9.jpg",
+  "/assets/product/grey/10.jpg",
+  "/assets/product/grey/11.jpg",
+  "/assets/product/grey/12.jpg",
+  "/assets/product/grey/13.jpg",
 ];
 
 const FEATURES = [

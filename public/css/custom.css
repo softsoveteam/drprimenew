@@ -9633,7 +9633,7 @@ header.main-header.dp-header .slicknav_nav .slicknav_row:hover{
 .dp-stats h2 { font-size: 3rem; color: var(--primary-color); margin-bottom: 8px; }
 .dp-stats h3 { color: var(--primary-color); margin-bottom: 10px; }
 .dp-stats p { color: var(--text-color); margin: 0; }
-.dp-stats img { width: 100%; max-width: 420px; margin: 0 auto; display: block; }
+.dp-stats img { width: 100%; max-width: 260px; margin: 0 auto; display: block; }
 .dp-stats-line {
   text-align: center;
   color: var(--primary-color);

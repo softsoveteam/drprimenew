@@ -278,7 +278,7 @@ export default function ProductPage() {
               <p>Breathable, moisture-wicking fabric that stays cool all night for undisturbed sleep.</p>
             </div>
             <img
-              src={color === "grey" ? "/assets/gray-pillow.png" : "/assets/blue-pillow.png"}
+              src={color === "grey" ? "/assets/product/grey/stats-pillow.jpg" : "/assets/product/blue/stats-pillow.jpg"}
               alt={color === "grey" ? "Pillow - Grey" : "Pillow - Blue"}
             />
             <div>
